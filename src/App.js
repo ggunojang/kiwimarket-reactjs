@@ -1,23 +1,53 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import LoginForm from "./Components/LoginForm";
+
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+//import ProtectedComponent from "./Components/ProtectedComponent";
+
+import Header from "./Components/Header";
+import Footer from "./Components/Footer";
+import SignUpForm from "./Components/SignUpForm";
+import Logout from "./Components/Logout";
 
 function App() {
+  const [token, setToken] = useState(localStorage.getItem("access_token"));
+
+  const setAccessToken = (newToken) => {
+    localStorage.setItem("access_token", newToken);
+    setToken(newToken);
+  };
+
+  const removeAccessToken = () => {
+    localStorage.removeItem("access_token");
+    setToken(null);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App container mx-auto ">
+      <BrowserRouter>
+        <div className="flex-1 grid-flow-row flex-col justify-center">
+          <Header />
+          <Routes>
+            {token ? (
+              //{<ProtectedComponent />}
+              <Route
+                path="/logout"
+                element={<Logout removeAccessToken={removeAccessToken} />}
+              />
+            ) : (
+              <>
+                <Route
+                  path="/login"
+                  element={<LoginForm setAccessToken={setAccessToken} />}
+                />
+                <Route path="/signup" element={<SignUpForm />} />
+              </>
+            )}
+          </Routes>
+          <Footer />
+        </div>
+      </BrowserRouter>
     </div>
   );
 }
