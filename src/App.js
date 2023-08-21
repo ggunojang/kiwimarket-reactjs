@@ -23,7 +23,6 @@ function App() {
   const [token, setToken] = useState(localStorage.getItem("access_token"));
 
   const getAccessToken = () => {
-    console.log(token);
     return token;
   };
 
@@ -38,7 +37,7 @@ function App() {
   };
 
   return (
-    <div className="App container mx-auto ">
+    <div className="App mx-auto w-full ">
       <BrowserRouter>
         <div className="flex-1 grid-flow-row flex-col justify-center">
           <Header getAccessToken={getAccessToken} />

@@ -1,10 +1,16 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import LoadPage from "./LoadPage";
+import ConfirmModal from "./Modals/ConfirmModal";
+import AlertModal from "./Modals/AlertModal";
 
 const UpdateProfile = ({ getAccessToken }) => {
   const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
+  const [confirmShowModal, setConfirmShowModal] = useState(false);
+  const [confirmModalMessage, setConfirmModalMessage] = useState("");
+  const [modalMessage, setModalMessage] = useState("");
 
   const emailRef = useRef();
   const usernameRef = useRef();
@@ -41,9 +47,7 @@ const UpdateProfile = ({ getAccessToken }) => {
     fetchUserInfo();
   }, [getAccessToken]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const handleConfirm = useCallback(async () => {
     try {
       const data = new URLSearchParams();
       data.append("username", usernameRef.current.value);
@@ -53,24 +57,33 @@ const UpdateProfile = ({ getAccessToken }) => {
       data.append("password", passwordRef.current.value);
       data.append("passconf", passwordConfirmRef.current.value);
 
-      console.log(data);
+      //console.log(data);
 
       const { data: responseData } = await axios.post(
-        "http://localhost:8080/api/auth/signup",
+        "http://localhost:8080/api/auth/modify",
         data,
       );
 
       if (responseData.status) {
-        console.log("sign in successfully");
+        //console.log("sign in successfully");
+        setModalMessage("updated successfully");
       } else {
-        console.log("sign in failed");
-        console.log(responseData.errors);
+        //console.log(responseData.errors);
+        setModalMessage(responseData.errors);
       }
-      navigate("/");
+      setShowModal(true);
+      //navigate("/");
     } catch (error) {
       console.error("Login failed", error);
     }
-  };
+  }, []);
+
+  const handleSubmit = useCallback((e) => {
+    e.preventDefault();
+
+    setConfirmModalMessage("정보를 수정하시겠습니까?");
+    setConfirmShowModal(true);
+  }, []);
 
   if (!loading) {
     return <LoadPage pagetext="Modify Profile" />;
@@ -81,6 +94,14 @@ const UpdateProfile = ({ getAccessToken }) => {
 
     return (
       <div className="justify-center px-6 py-12 lg:px-8">
+        {confirmShowModal && (
+          <ConfirmModal
+            title={confirmModalMessage}
+            onConfirm={handleConfirm}
+            onClose={() => setConfirmShowModal(false)}
+          />
+        )}
+        {showModal && <AlertModal title={modalMessage} />}
         <div className="md:mx-auto md:w-full md:max-w-2xl">
           <h2 className="mt-5 text-2xl font-semibold leading-9 tracking-tight text-gray-900">
             Modify Profile
@@ -93,11 +114,11 @@ const UpdateProfile = ({ getAccessToken }) => {
 
         <div className="mt-10 md:mx-auto md:w-full md:max-w-2xl">
           <form
-            className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 space-y-6 sm:grid-cols-6"
+            className="mt-10 grid grid-cols-1 gap-x-6 gap-y-6 space-y-1 sm:grid-cols-6"
             onSubmit={handleSubmit}
             method="POST"
           >
-            <div className="col-span-full">
+            <div className="col-span-full border-t border-teal-100 pt-5">
               <label
                 htmlFor="username"
                 className="block text-sm font-medium leading-6 text-gray-900"
@@ -111,14 +132,14 @@ const UpdateProfile = ({ getAccessToken }) => {
                   type="text"
                   ref={usernameRef}
                   placeholder="user ID"
-                  value={user.username}
+                  defaultValue={user.username}
                   required
                   className="block w-full rounded-md border-0 px-3 py-1.5 text-gray-600 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
 
-            <div className="col-span-full">
+            <div className="col-span-full  pt-6">
               <label
                 htmlFor="email"
                 className="block text-sm font-medium leading-6 text-gray-900"
@@ -133,17 +154,19 @@ const UpdateProfile = ({ getAccessToken }) => {
                   autoComplete="email"
                   ref={emailRef}
                   placeholder="email address"
-                  value={email}
+                  defaultValue={email}
                   required
                   className="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
 
+            <div className="col-span-full my-0 space-y-0 py-0"></div>
+
             <div className="sm:col-span-3">
               <label
                 htmlFor="firstname"
-                className="block rounded-md text-sm font-medium leading-6 text-gray-900"
+                className="block rounded-md text-sm font-medium  text-gray-900"
               >
                 First name
               </label>
@@ -154,17 +177,19 @@ const UpdateProfile = ({ getAccessToken }) => {
                   type="text"
                   ref={firstnameRef}
                   placeholder="firstname"
-                  value={user_detail.firstname}
+                  defaultValue={user_detail.firstname}
                   required
                   className="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
 
+            <div className="border-t border-teal-100 sm:hidden sm:border-hidden md:col-span-full"></div>
+
             <div className="sm:col-span-3">
               <label
                 htmlFor="lastname"
-                className="block rounded-md text-sm font-medium leading-6 text-gray-900"
+                className="block rounded-md text-sm font-medium text-gray-900"
               >
                 Last name
               </label>
@@ -175,14 +200,14 @@ const UpdateProfile = ({ getAccessToken }) => {
                   type="text"
                   ref={lastnameRef}
                   placeholder="lastname"
-                  value={user_detail.lastname}
+                  defaultValue={user_detail.lastname}
                   required
                   className="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
 
-            <div className="col-span-full">
+            <div className="col-span-full pt-6">
               <div className="flex items-center justify-between">
                 <label
                   htmlFor="inputPassword"
@@ -199,13 +224,12 @@ const UpdateProfile = ({ getAccessToken }) => {
                   ref={passwordRef}
                   placeholder="password"
                   autoComplete="new-password"
-                  required
                   className="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
 
-            <div className="col-span-full">
+            <div className=" col-span-full pt-6">
               <div className="flex items-center justify-between">
                 <label
                   htmlFor="inputConfirmPassword"
@@ -222,7 +246,6 @@ const UpdateProfile = ({ getAccessToken }) => {
                   ref={passwordConfirmRef}
                   placeholder="password confirm"
                   autoComplete="new-password"
-                  required
                   className="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
@@ -232,6 +255,7 @@ const UpdateProfile = ({ getAccessToken }) => {
               <button
                 type="button"
                 className="rounded-md text-sm font-semibold leading-6 text-gray-900"
+                onClick={() => navigate(-1)}
               >
                 Cancel
               </button>

@@ -6,12 +6,12 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Example() {
+export default function Dropdown({ username }) {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
         <Menu.Button className="inline-flex w-full items-center justify-center text-sm font-semibold text-gray-900">
-          <div className="mr-4">ggunojang</div>
+          <div className="mr-4">{username}</div>
           <div>
             <img
               className="inline-block h-8 w-8 rounded-full ring-2 ring-white"

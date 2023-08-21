@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Dropdown from "./Dropdown";
+import axios from "axios";
 
 const navigation = [
   { name: "Product", href: "#" },
@@ -12,9 +13,37 @@ const navigation = [
 
 export default function Header({ getAccessToken }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [userData, setUserData] = useState(null);
   const token = getAccessToken();
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      if (!token) {
+        setUserData({ user: { username: "" } });
+        return;
+      }
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+
+      try {
+        const {
+          data: { status, user },
+        } = await axios.get("http://localhost:8080/api/auth/user-info", {
+          headers: headers,
+        });
+        setUserData(user);
+      } catch (error) {
+        console.error("Error fetching user info:", error);
+      }
+    };
+
+    fetchUserInfo();
+  }, [getAccessToken, token]);
+
+  console.log(userData);
   return (
-    <header className=" inset-x-0 top-0 z-50 row-span-1">
+    <header className="container inset-x-0 top-0 z-50 row-span-1 mx-auto mb-10">
       <nav
         className="flex items-center justify-between p-6 lg:px-8"
         aria-label="Global"
@@ -64,7 +93,7 @@ export default function Header({ getAccessToken }) {
             </>
           ) : (
             <>
-              <Dropdown />
+              <Dropdown username={userData ? userData.user.username : ""} />
             </>
           )}
         </div>

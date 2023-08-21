@@ -1,8 +1,10 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import LoadPage from "./LoadPage";
 
 function Profile({ getAccessToken }) {
+  const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -50,64 +52,57 @@ function Profile({ getAccessToken }) {
           </p>
         </div>
 
-        <div className="mt-10 md:mx-auto md:w-full md:max-w-2xl">
-          <div className="grid grid-cols-1 gap-x-6 gap-y-8 space-y-6 sm:grid-cols-6">
-            <div className="col-span-full">
-              <label
-                htmlFor="username"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                User ID
-              </label>
-              <div className="mt-2 block w-full border-0 py-1.5 text-sm text-gray-600">
-                {user.username}
+        <div className="mt-5 md:mx-auto md:w-full md:max-w-2xl">
+          <div className="mt-6 border-t border-gray-100">
+            <dl className="divide-y divide-gray-100">
+              <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt className="text-sm font-medium leading-6 text-gray-900">
+                  User ID
+                </dt>
+                <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                  {user.username}
+                </dd>
               </div>
-            </div>
-
-            <div className="col-span-full mt-6">
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Email address
-              </label>
-              <div className="mt-2 block w-full border-0 py-1.5 text-sm text-gray-600">
-                {email}
+              <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt className="text-sm font-medium leading-6 text-gray-900">
+                  Email address
+                </dt>
+                <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                  {email}
+                </dd>
               </div>
-            </div>
-
-            <div className="sm:col-span-3">
-              <label
-                htmlFor="firstname"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                First name
-              </label>
-              <div className="mt-2 block w-full border-0 py-1.5 text-sm text-gray-600">
-                {user_detail.firstname}
+              <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt className="text-sm font-medium leading-6 text-gray-900">
+                  First name
+                </dt>
+                <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                  {user_detail.firstname}
+                </dd>
               </div>
-            </div>
-
-            <div className="sm:col-span-3">
-              <label
-                htmlFor="lastname"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Last name
-              </label>
-              <div className="mt-2 block w-full border-0 py-1.5 text-sm text-gray-600">
-                {user_detail.lastname}
+              <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt className="text-sm font-medium leading-6 text-gray-900">
+                  Last name
+                </dt>
+                <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                  {user_detail.lastname}
+                </dd>
               </div>
-            </div>
-
-            <div className="col-span-full flex items-center justify-end gap-x-3  border-t border-gray-900/10 pt-10">
-              <a
-                href="/modify-profile"
-                className="flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                Modify Profile
-              </a>
-            </div>
+              <div className="col-span-full flex items-center justify-end gap-x-3  border-t border-gray-900/10 pt-10">
+                <button
+                  type="button"
+                  className="rounded-md text-sm font-semibold leading-6 text-gray-900"
+                  onClick={() => navigate(-1)}
+                >
+                  Cancel
+                </button>
+                <a
+                  href="/modify-profile"
+                  className="flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                >
+                  Modify Profile
+                </a>
+              </div>
+            </dl>
           </div>
         </div>
       </div>
