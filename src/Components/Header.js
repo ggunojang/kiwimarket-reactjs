@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import Dropdown from "./Dropdown";
 
 const navigation = [
   { name: "Product", href: "#" },
@@ -9,17 +10,17 @@ const navigation = [
   { name: "Company", href: "#" },
 ];
 
-export default function Header() {
+export default function Header({ getAccessToken }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
+  const token = getAccessToken();
   return (
-    <header className="inset-x-0 top-0 z-50 row-span-1 ">
+    <header className=" inset-x-0 top-0 z-50 row-span-1">
       <nav
         className="flex items-center justify-between p-6 lg:px-8"
         aria-label="Global"
       >
         <div className="flex lg:flex-1">
-          <a href="http://" className="-m-1.5 p-1.5">
+          <a href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
             <img
               className="h-8 w-auto"
@@ -49,15 +50,26 @@ export default function Header() {
             </a>
           ))}
         </div>
+
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <a
-            href="/login"
-            className="text-sm font-semibold leading-6 text-gray-900"
-          >
-            Log in <span aria-hidden="true">&rarr;</span>
-          </a>
+          {!token ? (
+            <>
+              <a href="/login" className="text-sm leading-6 text-gray-900">
+                Login
+              </a>
+              <div className="px-2">|</div>
+              <a href="/signup" className="text-sm leading-6 text-gray-900">
+                Register
+              </a>
+            </>
+          ) : (
+            <>
+              <Dropdown />
+            </>
+          )}
         </div>
       </nav>
+      {/* 모바일 */}
       <Dialog
         as="div"
         className="lg:hidden"
@@ -98,12 +110,29 @@ export default function Header() {
                 ))}
               </div>
               <div className="py-6">
-                <a
-                  href="/login"
-                  className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                >
-                  Log in
-                </a>
+                {!token ? (
+                  <>
+                    <a
+                      href="/login"
+                      className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                    >
+                      Log in
+                    </a>
+                    <a
+                      href="/signup"
+                      className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                    >
+                      Register
+                    </a>
+                  </>
+                ) : (
+                  <a
+                    href="/logout"
+                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                  >
+                    Log out
+                  </a>
+                )}
               </div>
             </div>
           </div>
