@@ -1,15 +1,22 @@
-import React, { useRef, useEffect, useState, useCallback } from "react";
+import React, {
+  useRef,
+  useEffect,
+  useState,
+  useCallback,
+  useContext,
+} from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import LoadPage from "./LoadPage";
-import ConfirmModal from "./Modals/ConfirmModal";
-import AlertModal from "./Modals/AlertModal";
+import { AuthContext } from "../contexts/AuthContext";
+import LoadPage from "../components/LoadPage";
+import ConfirmModal from "../components/modals/ConfirmModal";
+import AlertModal from "../components/modals/AlertModal";
+import { getUser, modifyUser } from "../api/auth";
 
-const UpdateProfile = ({ getAccessToken }) => {
+const UpdateProfile = () => {
   const navigate = useNavigate();
+  const { dispatch } = useContext(AuthContext); // useContext를 사용하여 dispatch 함수를 가져옵니다.
   const [showModal, setShowModal] = useState(false);
   const [confirmShowModal, setConfirmShowModal] = useState(false);
-  const [confirmModalMessage, setConfirmModalMessage] = useState("");
   const [modalMessage, setModalMessage] = useState("");
 
   const emailRef = useRef();
@@ -20,32 +27,15 @@ const UpdateProfile = ({ getAccessToken }) => {
   const passwordConfirmRef = useRef();
 
   const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(false);
+
+  const {
+    state: { isLogin, user },
+  } = useContext(AuthContext);
 
   useEffect(() => {
-    const fetchUserInfo = async () => {
-      const token = getAccessToken();
-      const headers = {
-        Authorization: `Bearer ${token}`,
-      };
-
-      try {
-        setLoading(true);
-        const {
-          data: { status, user },
-        } = await axios.get("http://localhost:8080/api/auth/user-info", {
-          headers: headers,
-        });
-        setUserData(user);
-        if (status === "true") setLoading(false);
-      } catch (error) {
-        console.error("Error fetching user info:", error);
-        setLoading(false);
-      }
-    };
-
-    fetchUserInfo();
-  }, [getAccessToken]);
+    setUserData(user); // useEffect 훅을 사용하여 user 값이 변경될 때만 setUserData 함수를 호출하도록 합니다.
+    console.log(isLogin);
+  }, [user, isLogin]);
 
   const handleConfirm = useCallback(async () => {
     try {
@@ -57,46 +47,42 @@ const UpdateProfile = ({ getAccessToken }) => {
       data.append("password", passwordRef.current.value);
       data.append("passconf", passwordConfirmRef.current.value);
 
-      //console.log(data);
-
-      const { data: responseData } = await axios.post(
-        "http://localhost:8080/api/auth/modify",
-        data,
-      );
+      const responseData = await modifyUser(data);
 
       if (responseData.status) {
-        //console.log("sign in successfully");
         setModalMessage("updated successfully");
+
+        const user = await getUser();
+        localStorage.setItem("user", JSON.stringify(user));
+
+        // AuthContext의 상태를 업데이트합니다.
+        dispatch({ type: "UPDATE_USER", payload: user });
       } else {
-        //console.log(responseData.errors);
         setModalMessage(responseData.errors);
       }
       setShowModal(true);
-      //navigate("/");
     } catch (error) {
       console.error("Login failed", error);
     }
-  }, []);
+  }, [dispatch]);
 
   const handleSubmit = useCallback((e) => {
     e.preventDefault();
-
-    setConfirmModalMessage("정보를 수정하시겠습니까?");
     setConfirmShowModal(true);
   }, []);
 
-  if (!loading) {
+  if (!isLogin) {
     return <LoadPage pagetext="Modify Profile" />;
   }
 
-  if (userData !== null) {
-    const { user, email, user_detail } = userData;
-
+  if (isLogin && userData !== null) {
+    const { email, user, user_detail } = userData;
     return (
       <div className="justify-center px-6 py-12 lg:px-8">
         {confirmShowModal && (
           <ConfirmModal
-            title={confirmModalMessage}
+            title="Would you like to edit the information?"
+            message='Would you like to edit the information? To cancel, press "Cancel". To confirm, press "Confirm" proceed to the next step.'
             onConfirm={handleConfirm}
             onClose={() => setConfirmShowModal(false)}
           />
@@ -134,7 +120,7 @@ const UpdateProfile = ({ getAccessToken }) => {
                   placeholder="user ID"
                   defaultValue={user.username}
                   required
-                  className="block w-full rounded-md border-0 px-3 py-1.5 text-gray-600 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 px-3 py-1.5 text-gray-600 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -156,7 +142,7 @@ const UpdateProfile = ({ getAccessToken }) => {
                   placeholder="email address"
                   defaultValue={email}
                   required
-                  className="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -179,7 +165,7 @@ const UpdateProfile = ({ getAccessToken }) => {
                   placeholder="firstname"
                   defaultValue={user_detail.firstname}
                   required
-                  className="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -202,7 +188,7 @@ const UpdateProfile = ({ getAccessToken }) => {
                   placeholder="lastname"
                   defaultValue={user_detail.lastname}
                   required
-                  className="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -224,7 +210,7 @@ const UpdateProfile = ({ getAccessToken }) => {
                   ref={passwordRef}
                   placeholder="password"
                   autoComplete="new-password"
-                  className="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -246,7 +232,7 @@ const UpdateProfile = ({ getAccessToken }) => {
                   ref={passwordConfirmRef}
                   placeholder="password confirm"
                   autoComplete="new-password"
-                  className="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -261,9 +247,9 @@ const UpdateProfile = ({ getAccessToken }) => {
               </button>
               <button
                 type="submit"
-                className="justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
               >
-                Save
+                Update
               </button>
             </div>
           </form>

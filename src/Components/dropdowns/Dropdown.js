@@ -1,5 +1,6 @@
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
+import { UserIcon } from "@heroicons/react/24/solid";
 // https://headlessui.com/
 
 function classNames(...classes) {
@@ -13,11 +14,12 @@ export default function Dropdown({ username }) {
         <Menu.Button className="inline-flex w-full items-center justify-center text-sm font-semibold text-gray-900">
           <div className="mr-4">{username}</div>
           <div>
-            <img
-              className="inline-block h-8 w-8 rounded-full ring-2 ring-white"
-              src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-              alt=""
-            />
+            <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gray-50 sm:mx-0 sm:h-10 sm:w-10">
+              <UserIcon
+                className="h-6 w-6 font-bold text-gray-500"
+                aria-hidden="true"
+              />
+            </div>
           </div>
         </Menu.Button>
       </div>
@@ -49,7 +51,7 @@ export default function Dropdown({ username }) {
             <Menu.Item>
               {({ active }) => (
                 <a
-                  href="#"
+                  href="/"
                   className={classNames(
                     active ? "bg-gray-100 text-gray-900" : "text-gray-700",
                     "block px-4 py-2 text-sm",
@@ -62,7 +64,7 @@ export default function Dropdown({ username }) {
             <Menu.Item>
               {({ active }) => (
                 <a
-                  href="#"
+                  href="/"
                   className={classNames(
                     active ? "bg-gray-100 text-gray-900" : "text-gray-700",
                     "block px-4 py-2 text-sm",

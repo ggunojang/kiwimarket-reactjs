@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import Dropdown from "./Dropdown";
-import axios from "axios";
+import { AuthContext } from "../../contexts/AuthContext";
+
+import Dropdown from "../../components/dropdowns/Dropdown";
 
 const navigation = [
   { name: "Product", href: "#" },
@@ -11,37 +12,17 @@ const navigation = [
   { name: "Company", href: "#" },
 ];
 
-export default function Header({ getAccessToken }) {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+export default function Header() {
   const [userData, setUserData] = useState(null);
-  const token = getAccessToken();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const {
+    state: { isLogin, user },
+  } = useContext(AuthContext);
 
   useEffect(() => {
-    const fetchUserInfo = async () => {
-      if (!token) {
-        setUserData({ user: { username: "" } });
-        return;
-      }
-      const headers = {
-        Authorization: `Bearer ${token}`,
-      };
+    setUserData(user); // useEffect 훅을 사용하여 user 값이 변경될 때만 setUserData 함수를 호출하도록 합니다.
+  }, [user]);
 
-      try {
-        const {
-          data: { status, user },
-        } = await axios.get("http://localhost:8080/api/auth/user-info", {
-          headers: headers,
-        });
-        setUserData(user);
-      } catch (error) {
-        console.error("Error fetching user info:", error);
-      }
-    };
-
-    fetchUserInfo();
-  }, [getAccessToken, token]);
-
-  console.log(userData);
   return (
     <header className="container inset-x-0 top-0 z-50 row-span-1 mx-auto mb-10">
       <nav
@@ -81,7 +62,7 @@ export default function Header({ getAccessToken }) {
         </div>
 
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          {!token ? (
+          {!isLogin && !user ? (
             <>
               <a href="/login" className="text-sm leading-6 text-gray-900">
                 Login
@@ -93,7 +74,7 @@ export default function Header({ getAccessToken }) {
             </>
           ) : (
             <>
-              <Dropdown username={userData ? userData.user.username : ""} />
+              <Dropdown username={user.user.username} />
             </>
           )}
         </div>
@@ -139,7 +120,7 @@ export default function Header({ getAccessToken }) {
                 ))}
               </div>
               <div className="py-6">
-                {!token ? (
+                {!isLogin ? (
                   <>
                     <a
                       href="/login"

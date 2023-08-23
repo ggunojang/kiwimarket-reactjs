@@ -6,7 +6,13 @@ import { useNavigate } from "react-router-dom";
 /**
  * 각 모델의 설정이 필요할 듯 싶은데 ~ confirm 으로 확인/아니오 기본 경고 모델 확인 되었다!
  */
-export default function ConfirmModal({ title, onConfirm, onClose }) {
+export default function ConfirmModal({
+  title,
+  message,
+  onConfirm,
+  onClose,
+  moveUrl = null,
+}) {
   const navigate = useNavigate();
   const [open, setOpen] = useState(true);
 
@@ -15,7 +21,7 @@ export default function ConfirmModal({ title, onConfirm, onClose }) {
   const useHandleClick = () => {
     setOpen(false);
     if (onConfirm) {
-      onConfirm();
+      moveUrl ? navigate(moveUrl) : onConfirm();
     } else {
       navigate("/");
     }
@@ -76,11 +82,7 @@ export default function ConfirmModal({ title, onConfirm, onClose }) {
                         {title}
                       </Dialog.Title>
                       <div className="mt-2">
-                        <p className="text-sm text-gray-500">
-                          Are you sure you want to deactivate your account? All
-                          of your data will be permanently removed. This action
-                          cannot be undone.
-                        </p>
+                        <p className="text-sm text-gray-500">{message}</p>
                       </div>
                     </div>
                   </div>
@@ -91,7 +93,7 @@ export default function ConfirmModal({ title, onConfirm, onClose }) {
                     className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
                     onClick={useHandleClick}
                   >
-                    Deactivate
+                    Confirm
                   </button>
                   <button
                     type="button"

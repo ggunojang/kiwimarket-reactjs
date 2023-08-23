@@ -1,12 +1,12 @@
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import { CheckIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 
 /**
  * 각 모델의 설정이 필요할 듯 싶은데 ~ confirm 으로 확인/아니오 기본 경고 모델 확인 되었다!
  */
-export default function AlertModal({ title }) {
+export default function AlertModal({ title, message }) {
   const navigate = useNavigate();
   const [open, setOpen] = useState(true);
 
@@ -44,9 +44,9 @@ export default function AlertModal({ title }) {
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
                 <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                   <div className="sm:flex sm:items-start">
-                    <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                      <ExclamationTriangleIcon
-                        className="h-6 w-6 text-red-600"
+                    <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-indigo-100 sm:mx-0 sm:h-10 sm:w-10">
+                      <CheckIcon
+                        className="h-6 w-6 text-indigo-600"
                         aria-hidden="true"
                       />
                     </div>
@@ -58,11 +58,7 @@ export default function AlertModal({ title }) {
                         {title}
                       </Dialog.Title>
                       <div className="mt-2">
-                        <p className="text-sm text-gray-500">
-                          Are you sure you want to deactivate your account? All
-                          of your data will be permanently removed. This action
-                          cannot be undone.
-                        </p>
+                        <p className="text-sm text-gray-500">{message}</p>
                       </div>
                     </div>
                   </div>
@@ -70,7 +66,7 @@ export default function AlertModal({ title }) {
                 <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                   <button
                     type="button"
-                    className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
+                    className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto"
                     onClick={useHandleClick}
                   >
                     OK

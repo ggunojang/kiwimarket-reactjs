@@ -1,17 +1,18 @@
-import React, { useState } from "react";
-import LoginForm from "./Components/LoginForm";
+import React, { useContext, useEffect } from "react";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-//import ProtectedComponent from "./Components/ProtectedComponent";
+import { AuthContext } from "./contexts/AuthContext";
+import { getAccessToken } from "./utils/tokens";
 
-import Header from "./Components/Header";
-import Footer from "./Components/Footer";
-import SignUpForm from "./Components/SignUpForm";
-import Logout from "./Components/Logout";
-import Home from "./Components/Home";
-import Profile from "./Components/Profile";
-import UpdateProfile from "./Components/ModifyProfile";
+import Header from "./pages/layouts/Header";
+import Footer from "./pages/layouts/Footer";
+import LoginForm from "./pages/LoginForm";
+import SignUpForm from "./pages/SignUpForm";
+import Logout from "./pages/Logout";
+import Home from "./pages/Home";
+import Profile from "./pages/Profile";
+import UpdateProfile from "./pages/ModifyProfile";
 
 /**
  * 사용자 프로파일을 별도로 저장을 해야합니다.!
@@ -20,51 +21,38 @@ import UpdateProfile from "./Components/ModifyProfile";
  * 사용자정보를 페이지마다 계속 호출이 됨.
  */
 function App() {
-  const [token, setToken] = useState(localStorage.getItem("access_token"));
+  const { dispatch } = useContext(AuthContext); // useContext를 사용하여 dispatch 함수를 가져옵니다.
 
-  const getAccessToken = () => {
-    return token;
-  };
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (getAccessToken()) {
+        const storedUser = localStorage.getItem("user");
+        if (storedUser !== "undefined") {
+          try {
+            const parsedUser = JSON.parse(storedUser);
+            dispatch({ type: "LOGIN", payload: parsedUser });
+          } catch (error) {
+            console.error("Failed to parse stored user data", error);
+          }
+        }
+      }
+    };
 
-  const setAccessToken = (newToken) => {
-    localStorage.setItem("access_token", newToken);
-    setToken(newToken);
-  };
-
-  const removeAccessToken = () => {
-    localStorage.removeItem("access_token");
-    setToken(null);
-  };
+    fetchUser();
+  }, [dispatch]);
 
   return (
     <div className="App mx-auto w-full ">
       <BrowserRouter>
         <div className="flex-1 grid-flow-row flex-col justify-center">
-          <Header getAccessToken={getAccessToken} />
+          <Header />
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route
-              path="/logout"
-              element={
-                <Logout
-                  getAccessToken={getAccessToken}
-                  removeAccessToken={removeAccessToken}
-                />
-              }
-            />
-            <Route
-              path="/login"
-              element={<LoginForm setAccessToken={setAccessToken} />}
-            />
+            <Route path="/logout" element={<Logout />} />
+            <Route path="/login" element={<LoginForm />} />
             <Route path="/signup" element={<SignUpForm />} />
-            <Route
-              path="/profile"
-              element={<Profile getAccessToken={getAccessToken} />}
-            />
-            <Route
-              path="/modify-profile"
-              element={<UpdateProfile getAccessToken={getAccessToken} />}
-            />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/modify-profile" element={<UpdateProfile />} />
           </Routes>
           <Footer />
         </div>

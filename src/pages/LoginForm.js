@@ -1,38 +1,30 @@
-import React, { useRef } from "react";
+import React, { useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { login } from "../api/auth";
+import { AuthContext } from "../contexts/AuthContext";
 
-const LoginForm = ({ setAccessToken }) => {
+const LoginForm = () => {
   const navigate = useNavigate();
+  const { dispatch } = useContext(AuthContext); // useContext를 사용하여 dispatch 함수를 가져옵니다.
 
   const emailRef = useRef();
   const passwordRef = useRef();
-  /*
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-*/
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const data = new URLSearchParams();
-      data.append("email", emailRef.current.value);
-      data.append("password", passwordRef.current.value);
+      const email = emailRef.current.value;
+      const password = passwordRef.current.value;
+      const data = await login(email, password);
 
-      const response = await axios.post(
-        "http://localhost:8080/api/auth/user-login",
-        data,
-        {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-        },
-      );
+      if (data) {
+        console.log("Logged in successfully");
 
-      const token = response.data.token;
-      setAccessToken(token);
-      console.log("Logged in successfully");
-      navigate("/");
+        dispatch({ type: "LOGIN", payload: data });
+
+        navigate("/");
+      }
     } catch (error) {
       alert("Login failed");
       console.error("Login failed", error);

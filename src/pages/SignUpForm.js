@@ -1,6 +1,7 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { registerUser } from "../api/auth";
+import AlertModal from "../components/modals/AlertModal";
 
 export default function SignUpForm() {
   const navigate = useNavigate();
@@ -11,6 +12,9 @@ export default function SignUpForm() {
   const lastnameRef = useRef();
   const passwordRef = useRef();
   const passwordConfirmRef = useRef();
+
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,20 +28,20 @@ export default function SignUpForm() {
       data.append("password", passwordRef.current.value);
       data.append("passconf", passwordConfirmRef.current.value);
 
-      console.log(data);
+      console.log("data", data);
 
-      const { data: responseData } = await axios.post(
-        "http://localhost:8080/api/auth/register",
-        data,
-      );
+      const responseData = await registerUser(data);
+      console.log("responseData", responseData);
 
       if (responseData.status) {
+        setModalMessage(responseData.message);
         console.log("sign in successfully");
       } else {
         console.log("sign in failed");
         console.log(responseData.errors);
+        setModalMessage(responseData.errors);
       }
-      navigate("/");
+      setShowModal(true);
     } catch (error) {
       console.error("Login failed", error);
     }
@@ -45,6 +49,9 @@ export default function SignUpForm() {
 
   return (
     <div className="justify-center px-6 py-12 lg:px-8">
+      {showModal && (
+        <AlertModal title="Register message" message={modalMessage} />
+      )}
       <div className="md:mx-auto md:w-full md:max-w-2xl">
         <h2 className="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
           Register to your account
@@ -188,6 +195,7 @@ export default function SignUpForm() {
             <button
               type="button"
               className="rounded-md text-sm font-semibold leading-6 text-gray-900"
+              onClick={() => navigate(-1)}
             >
               Cancel
             </button>
