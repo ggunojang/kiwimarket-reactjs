@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { registerUser } from "../api/auth";
-import AlertModal from "../components/modals/AlertModal";
+import { registerUser } from "../../api/auth";
+import AlertModal from "../../components/modals/AlertModal";
 
 export default function SignUpForm() {
   const navigate = useNavigate();

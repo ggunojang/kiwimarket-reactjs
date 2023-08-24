@@ -6,11 +6,11 @@ import React, {
   useContext,
 } from "react";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../contexts/AuthContext";
-import LoadPage from "../components/LoadPage";
-import ConfirmModal from "../components/modals/ConfirmModal";
-import AlertModal from "../components/modals/AlertModal";
-import { getUser, modifyUser } from "../api/auth";
+import { AuthContext } from "../../contexts/AuthContext";
+import LoadPage from "../../components/LoadPage";
+import ConfirmModal from "../../components/modals/ConfirmModal";
+import AlertModal from "../../components/modals/AlertModal";
+import { getUser, modifyUser } from "../../api/auth";
 
 const UpdateProfile = () => {
   const navigate = useNavigate();

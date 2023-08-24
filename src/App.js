@@ -7,12 +7,13 @@ import { getAccessToken } from "./utils/tokens";
 
 import Header from "./pages/layouts/Header";
 import Footer from "./pages/layouts/Footer";
-import LoginForm from "./pages/LoginForm";
-import SignUpForm from "./pages/SignUpForm";
-import Logout from "./pages/Logout";
+import LoginForm from "./pages/auths/LoginForm";
+import SignUpForm from "./pages/auths/SignUpForm";
+import Logout from "./pages/auths/Logout";
 import Home from "./pages/Home";
-import Profile from "./pages/Profile";
-import UpdateProfile from "./pages/ModifyProfile";
+import Profile from "./pages/auths/Profile";
+import UpdateProfile from "./pages/auths/ModifyProfile";
+import ForgotPassword from "./pages/auths/ForgotPassword";
 
 /**
  * 사용자 프로파일을 별도로 저장을 해야합니다.!
@@ -50,6 +51,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/logout" element={<Logout />} />
             <Route path="/login" element={<LoginForm />} />
+            <Route path="/forgetpassword" element={<ForgotPassword />} />
             <Route path="/signup" element={<SignUpForm />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/modify-profile" element={<UpdateProfile />} />

@@ -1,10 +1,10 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../contexts/AuthContext";
-import LoadPage from "../components/LoadPage";
-import ConfirmModal from "../components/modals/ConfirmModal";
+import { AuthContext } from "../../contexts/AuthContext";
+import LoadPage from "../../components/LoadPage";
+import ConfirmModal from "../../components/modals/ConfirmModal";
 
-import { formatDate } from "../utils/common";
+import { formatDate } from "../../utils/common";
 
 function Profile() {
   const navigate = useNavigate();

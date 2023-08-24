@@ -133,3 +133,16 @@ export const modifyUser = async (data) => {
 
   return responseData;
 };
+
+/**
+ * 비밀번호 찾기
+ */
+
+export const findPassword = async (data) => {
+  const { data: status } = await axios.post(
+    `${url}/api/auth/findpassword`,
+    data,
+  );
+  console.log(status);
+  return status;
+};

@@ -1,7 +1,7 @@
 import React, { useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { login } from "../api/auth";
-import { AuthContext } from "../contexts/AuthContext";
+import { login } from "../../api/auth";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -72,7 +72,7 @@ const LoginForm = () => {
               </label>
               <div className="text-sm">
                 <a
-                  href="https://gitav.kr"
+                  href="/forgetpassword"
                   className="font-semibold text-indigo-600 hover:text-indigo-500"
                 >
                   Forgot password?

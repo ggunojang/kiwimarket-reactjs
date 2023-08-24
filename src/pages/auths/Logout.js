@@ -1,8 +1,8 @@
 // src/components/ProtectedComponent.js
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { logout } from "../api/auth";
-import { AuthContext } from "../contexts/AuthContext";
+import { logout } from "../../api/auth";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const Logout = () => {
   const navigate = useNavigate();
