@@ -3,7 +3,7 @@ import React from "react";
 export default function Footer() {
   return (
     <footer className=" mt-10 w-full bg-slate-700 pb-16 pt-14 text-slate-100">
-      <div className="container inset-x-0 top-0 z-50 row-span-1 mx-auto px-4 sm:px-0">
+      <div className="container inset-x-0 top-0 z-50 row-span-1 mx-auto px-4 sm:px-2">
         <div className="flex flex-wrap justify-between">
           <div className="mb-4 w-full sm:w-full md:mb-0 md:w-2/6">
             <p className="text-sm">© 2023 gitav. All rights reserved.</p>

@@ -6,7 +6,7 @@ import { AuthContext } from "../../contexts/AuthContext";
 import Dropdown from "../../components/dropdowns/Dropdown";
 
 const navigation = [
-  { name: "Product", href: "#" },
+  { name: "Board", href: "/board/list" },
   { name: "Features", href: "#" },
   { name: "Marketplace", href: "#" },
   { name: "Company", href: "#" },

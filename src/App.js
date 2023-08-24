@@ -14,6 +14,7 @@ import Home from "./pages/Home";
 import Profile from "./pages/auths/Profile";
 import UpdateProfile from "./pages/auths/ModifyProfile";
 import ForgotPassword from "./pages/auths/ForgotPassword";
+import List from "./pages/boards/List";
 
 /**
  * 사용자 프로파일을 별도로 저장을 해야합니다.!
@@ -49,12 +50,15 @@ function App() {
           <Header />
           <Routes>
             <Route path="/" element={<Home />} />
+            {/* 회원관리 */}
             <Route path="/logout" element={<Logout />} />
             <Route path="/login" element={<LoginForm />} />
             <Route path="/forgetpassword" element={<ForgotPassword />} />
             <Route path="/signup" element={<SignUpForm />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/modify-profile" element={<UpdateProfile />} />
+            {/* 게시판 */}
+            <Route path="/board/list" element={<List />} />
           </Routes>
           <Footer />
         </div>
