@@ -27,3 +27,11 @@ export const formatDate = (format, date) => {
 
   return format.replace(/Y|m|d|h|i|s/g, (match) => options[match]);
 };
+
+// 글자 자르기
+export const truncateString = (str, num) => {
+  if (str.length <= num) {
+    return str;
+  }
+  return str.slice(0, num) + "...";
+};

@@ -1,14 +1,19 @@
 import React from "react";
+import { truncateString } from "../../utils/common";
 
-const Card = ({ title, description, image }) => {
+const Card = ({ person }) => {
+  const name = truncateString(person.name, 20);
+  const email = truncateString(person.email, 19);
   return (
-    <div className=" max-w-sm overflow-hidden rounded bg-white shadow-lg">
-      <img className="w-full" src={image} alt={title} />
-      <div className="px-6 py-4">
-        <div className="mb-2 text-xl font-bold">{title}</div>
-        <p className="text-base text-gray-700">{description}</p>
+    <>
+      <div className="w-full overflow-hidden rounded-lg bg-slate-500">
+        <img className="w-full" src={person.imageUrl} alt={person.title} />
       </div>
-    </div>
+      <div className="px-2 py-2">
+        <div className="font-bold">{name}</div>
+        <p className="mt-1 text-sm text-gray-500">{email}</p>
+      </div>
+    </>
   );
 };
 
