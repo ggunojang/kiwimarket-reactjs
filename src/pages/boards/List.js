@@ -102,7 +102,7 @@ const people = [
 
 const List = () => {
   return (
-    <div className="justify-center bg-slate-50 py-12 sm:px-6 lg:px-8">
+    <main className="justify-center bg-slate-50 py-12 sm:px-6 lg:px-8">
       <div className=" sm:mx-auto sm:w-full sm:max-w-sm">
         <h2 className="my-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
           Notice
@@ -169,7 +169,7 @@ const List = () => {
           <Pagination />
         </div>
       </div>
-    </div>
+    </main>
   );
 };
 

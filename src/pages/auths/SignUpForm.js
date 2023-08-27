@@ -48,7 +48,7 @@ export default function SignUpForm() {
   };
 
   return (
-    <div className="justify-center px-6 py-12 lg:px-8">
+    <main className="justify-center px-6 py-12 lg:px-8">
       {showModal && (
         <AlertModal title="Register message" message={modalMessage} />
       )}
@@ -218,6 +218,6 @@ export default function SignUpForm() {
           </a>
         </p>
       </div>
-    </div>
+    </main>
   );
 }
