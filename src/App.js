@@ -46,7 +46,7 @@ function App() {
   }, [dispatch]);
 
   return (
-    <div className="App mx-auto w-full ">
+    <div className="App mx-auto w-full bg-gray-50">
       <BrowserRouter>
         <div className="flex-1 grid-flow-row flex-col justify-center">
           <Header />

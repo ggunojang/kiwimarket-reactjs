@@ -273,29 +273,42 @@ function Cards() {
   }
   if (userData !== null) {
     return (
-      <main className="px-8 py-12 md:mx-auto md:max-w-3xl xl:mx-auto xl:w-full xl:max-w-5xl">
+      <main className="lg:max-w-5lg mt-14 px-8 py-12 md:mx-auto md:max-w-3xl lg:w-full lg:px-0 xl:mx-auto xl:w-full xl:max-w-6xl">
         <div className="mb-10 md:mx-auto md:w-full md:max-w-xl">
-          <h2 className="mt-5 text-center text-2xl font-semibold leading-9 tracking-tight text-gray-900">
-            Board
+          <h2 className="mt-5 text-center text-3xl font-semibold leading-9 tracking-tight text-gray-900">
+            중고거래 매물
           </h2>
         </div>
 
-        <div className="mb-10 flex items-center justify-start border-b border-gray-900/10 py-3">
-          <span className="text-xs font-semibold">Total 234</span>
+        <div className="my-5 flex w-full justify-end ">
+          <select
+            id="category"
+            defaultValue=""
+            required
+            className="block w-full rounded-md border border-gray-300 p-2.5 text-gray-400 shadow-sm sm:px-4 md:w-auto"
+          >
+            <option value="" disabled>
+              지역을 선택하세요.
+            </option>
+            <option value="1">category1</option>
+            <option value="2">category2</option>
+            <option value="3">category3</option>
+          </select>
         </div>
-        <ul className="mx-auto grid grid-cols-2 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
+
+        <ul className="mx-auto grid grid-cols-2 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
           {userData.map((person, index) => (
             <li key={index}>
               <Card person={person} />
             </li>
           ))}
         </ul>
-        <div className="mt-3 flex items-center justify-end border-t border-gray-900/10">
+        <div className="mt-1 flex items-center justify-end border-t border-gray-900/10">
           <a
             href="/board/write"
-            className="mt-3 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            className="mt-2 justify-center rounded-md px-3 py-1 text-sm font-semibold leading-6 tracking-tight text-black  hover:text-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            Post
+            Post >
           </a>
         </div>
       </main>

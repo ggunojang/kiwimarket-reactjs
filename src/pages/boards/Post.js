@@ -27,30 +27,41 @@ function Post() {
     const name = truncateString(userData.name, 40);
     const email = truncateString(userData.email, 40);
     return (
-      <main className="px-8 py-12 md:mx-auto md:w-full md:max-w-5xl">
-        <div className="mb-10 md:mx-auto md:w-full md:max-w-xl">
-          <h2 className="mt-5 text-center text-2xl font-semibold leading-9 tracking-tight text-gray-900">
-            Post
-          </h2>
+      <main className="lg:max-w-5lg mt-20 px-8 py-12 md:mx-auto md:max-w-3xl lg:w-full lg:px-0 xl:mx-auto xl:w-full xl:max-w-4xl">
+        <div>
+          <img
+            className="mx-auto w-full rounded-3xl transition-all duration-150"
+            src={userData.imageUrl}
+            alt={userData.title}
+          />
         </div>
-        <ul className="mx-auto grid grid-cols-1 gap-4 border-t border-gray-900/10 pt-5 ">
-          <li>{userData.title}</li>
-          <li>
-            <img
-              className="mx-auto w-full transition-all duration-150 sm:w-2/3 md:w-2/3"
-              src={userData.imageUrl}
-              alt={userData.title}
-            />
-          </li>
+        <ul className="mx-auto mt-5 grid grid-cols-1">
           <li>{name}</li>
-          <li>{email}</li>
+          <li>
+            <span className="text-xs text-gray-400">{email}</span>
+          </li>
         </ul>
-        <div className="mt-3 flex items-center justify-end border-t border-gray-900/10">
+        <ul className="mx-auto mt-5 grid grid-cols-1 gap-4 border-b border-t py-8">
+          <li>
+            <h2 className="text-xl font-semibold tracking-tight">
+              {userData.title}
+            </h2>
+            <span className="text-xs text-gray-400">생활가전 - 1일전</span>
+          </li>
+          <li className="text-lg font-semibold tracking-tight">
+            $300 <span className="text-xs text-gray-400">NZD</span>
+          </li>
+          <li>{userData.role}</li>
+          <li>
+            <span className="text-xs text-gray-400">관심 3 ∙ 조회 300</span>
+          </li>
+        </ul>
+        <div className="mt-1 flex items-center justify-end">
           <a
             href="/board/list"
-            className="mt-3 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            className="mt-2 justify-center rounded-md px-3 py-1 text-sm font-semibold leading-6 tracking-tight text-black  hover:text-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            List
+            List >
           </a>
         </div>
       </main>

@@ -48,7 +48,7 @@ export default function SignUpForm() {
   };
 
   return (
-    <main className="justify-center px-6 py-12 lg:px-8">
+    <main className="mt-14 justify-center px-6 py-12 lg:px-8">
       {showModal && (
         <AlertModal title="Register message" message={modalMessage} />
       )}

@@ -1,76 +1,125 @@
-import {
-  ArrowPathIcon,
-  CloudArrowUpIcon,
-  FingerPrintIcon,
-  LockClosedIcon,
-} from "@heroicons/react/24/outline";
+import React, { useEffect, useState } from "react";
+import Card from "../components/cards/Card";
+import LoadPage from "../components/LoadPage";
 
-const features = [
+const people = [
   {
-    name: "Push to deploy",
-    description:
-      "Morbi viverra dui mi arcu sed. Tellus semper adipiscing suspendisse semper morbi. Odio urna massa nunc massa.",
-    icon: CloudArrowUpIcon,
+    name: "Leslie Alexander",
+    title:
+      "A list of all the users in your account including their name, title, email and role.",
+    email: "leslie.alexander@example.com",
+    role: "Co-Founder / CEO",
+    imageUrl:
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+    lastSeen: "3h ago",
+    lastSeenDateTime: "2023-01-23T13:23Z",
   },
   {
-    name: "SSL certificates",
-    description:
-      "Sit quis amet rutrum tellus ullamcorper ultricies libero dolor eget. Sem sodales gravida quam turpis enim lacus amet.",
-    icon: LockClosedIcon,
+    name: "Michael Foster",
+    title:
+      "A list of all the users in your account including their name, title, email and role.",
+    email: "michael.foster@example.com",
+    role: "Co-Founder / CTO",
+    imageUrl:
+      "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+    lastSeen: "3h ago",
+    lastSeenDateTime: "2023-01-23T13:23Z",
   },
   {
-    name: "Simple queues",
-    description:
-      "Quisque est vel vulputate cursus. Risus proin diam nunc commodo. Lobortis auctor congue commodo diam neque.",
-    icon: ArrowPathIcon,
+    name: "Dries Vincent",
+    title:
+      "A list of all the users in your account including their name, title, email and role.",
+    email: "dries.vincent@example.com",
+    role: "Business Relations",
+    imageUrl:
+      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+    lastSeen: null,
   },
   {
-    name: "Advanced security",
-    description:
-      "Arcu egestas dolor vel iaculis in ipsum mauris. Tincidunt mattis aliquet hac quis. Id hac maecenas ac donec pharetra eget.",
-    icon: FingerPrintIcon,
+    name: "Lindsay Walton",
+    title:
+      "A list of all the users in your account including their name, title, email and role.",
+    email: "lindsay.walton@example.com",
+    role: "Front-end Developer",
+    imageUrl:
+      "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+    lastSeen: "3h ago",
+    lastSeenDateTime: "2023-01-23T13:23Z",
+  },
+  {
+    name: "Michael Foster",
+    title:
+      "A list of all the users in your account including their name, title, email and role.",
+    email: "michael.foster@example.com",
+    role: "Co-Founder / CTO",
+    imageUrl:
+      "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+    lastSeen: "3h ago",
+    lastSeenDateTime: "2023-01-23T13:23Z",
+  },
+  {
+    name: "Dries Vincent",
+    title:
+      "A list of all the users in your account including their name, title, email and role.",
+    email: "dries.vincent@example.com",
+    role: "Business Relations",
+    imageUrl:
+      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+    lastSeen: null,
+  },
+  {
+    name: "Lindsay Walton",
+    title:
+      "A list of all the users in your account including their name, title, email and role.",
+    email: "lindsay.walton@example.com",
+    role: "Front-end Developer",
+    imageUrl:
+      "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+    lastSeen: "3h ago",
+    lastSeenDateTime: "2023-01-23T13:23Z",
+  },
+  {
+    name: "Courtney Henry",
+    title:
+      "A list of all the users in your account including their name, title, email and role.",
+    email: "courtney.henry@example.com",
+    role: "Designer",
+    imageUrl:
+      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+    lastSeen: "3h ago",
+    lastSeenDateTime: "2023-01-23T13:23Z",
   },
 ];
 
-const Home = () => {
-  return (
-    <div className="bg-white py-24 sm:py-32">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="mx-auto max-w-2xl lg:text-center">
-          <h2 className="text-base font-semibold leading-7 text-indigo-600">
-            Deploy faster
+function Cards() {
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    setUserData(people);
+  }, []);
+
+  if (userData === null) {
+    return <LoadPage pagetext="board" />;
+  }
+  if (userData !== null) {
+    return (
+      <main className=" lg:max-w-5lg mt-14 px-8 py-12 md:mx-auto md:max-w-3xl lg:w-full lg:px-0 xl:mx-auto xl:w-full xl:max-w-5xl">
+        <div className="mb-10 md:mx-auto md:w-full md:max-w-xl">
+          <h2 className="mt-5 text-center text-3xl font-semibold leading-9 tracking-tight text-gray-900">
+            중고거래 인기매물
           </h2>
-          <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            Everything you need to deploy your app
-          </p>
-          <p className="mt-6 text-lg leading-8 text-gray-600">
-            Quis tellus eget adipiscing convallis sit sit eget aliquet quis.
-            Suspendisse eget egestas a elementum pulvinar et feugiat blandit at.
-            In mi viverra elit nunc.
-          </p>
         </div>
-        <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
-          <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-2 lg:gap-y-16">
-            {features.map((feature) => (
-              <div key={feature.name} className="relative pl-16">
-                <dt className="text-base font-semibold leading-7 text-gray-900">
-                  <div className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-600">
-                    <feature.icon
-                      className="h-6 w-6 text-white"
-                      aria-hidden="true"
-                    />
-                  </div>
-                  {feature.name}
-                </dt>
-                <dd className="mt-2 text-base leading-7 text-gray-600">
-                  {feature.description}
-                </dd>
-              </div>
-            ))}
-          </dl>
-        </div>
-      </div>
-    </div>
-  );
-};
-export default Home;
+
+        <ul className="mx-auto grid grid-cols-2 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
+          {userData.map((person, index) => (
+            <li key={index}>
+              <Card person={person} />
+            </li>
+          ))}
+        </ul>
+      </main>
+    );
+  }
+}
+
+export default Cards;

@@ -31,7 +31,7 @@ function Profile() {
   if (userData !== null) {
     const { email, user, user_detail } = userData;
     return (
-      <main className="justify-center px-6 py-12 lg:px-8">
+      <main className="mt-14 justify-center px-6 py-12 lg:px-8">
         {confirmShowModal && (
           <ConfirmModal
             title="Would you like to edit the information?"

@@ -7,7 +7,7 @@ const Card = ({ person }) => {
   return (
     <div className="group">
       <a href="/board/post">
-        <div className="h-32 w-full overflow-hidden rounded-lg bg-slate-500 sm:h-44 md:h-36 xl:h-52">
+        <div className="w-full overflow-hidden rounded-xl bg-slate-500">
           <img
             className="w-full transition-all duration-150 group-hover:scale-110"
             src={person.imageUrl}
@@ -15,8 +15,18 @@ const Card = ({ person }) => {
           />
         </div>
         <div className="px-2 py-2">
-          <div className="font-bold">{name}</div>
-          <p className="mt-1 text-sm text-gray-500">{email}</p>
+          <div className="font-nomal mb-1 tracking-tight text-gray-600">
+            냉장고 팝니다.
+          </div>
+          <p className="mb-1 font-bold tracking-tight">
+            $300 <span className="text-xs text-gray-400">NZD</span>
+          </p>
+          <p className="mt-1 text-sm tracking-tight text-gray-500">
+            경기도 광주시 상동
+          </p>
+          <div className="mt-1 text-xs tracking-tight text-gray-400">
+            관심 3 ∙ 조회 435
+          </div>
         </div>
       </a>
     </div>

@@ -24,12 +24,12 @@ export default function Header() {
   }, [user]);
 
   return (
-    <header className="container inset-x-0 top-0 z-50 row-span-1 mx-auto mb-10">
+    <header className="fixed left-0 right-0 top-0 z-50 bg-white">
       <nav
-        className="flex items-center justify-between p-6 lg:px-8"
+        className="container mx-auto flex h-20 items-center justify-between bg-white px-6"
         aria-label="Global"
       >
-        <div className="flex lg:flex-1">
+        <div className="flex items-center ">
           <a href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
             <img
@@ -38,7 +38,19 @@ export default function Header() {
               alt=""
             />
           </a>
+          <div className="ml-14 hidden lg:flex lg:gap-x-10 xl:ml-14">
+            {navigation.map((item) => (
+              <a
+                key={item.name}
+                href={item.href}
+                className="text-md font-semibold leading-6 text-gray-900"
+              >
+                {item.name}
+              </a>
+            ))}
+          </div>
         </div>
+
         <div className="flex lg:hidden">
           <button
             type="button"
@@ -48,17 +60,6 @@ export default function Header() {
             <span className="sr-only">Open main menu</span>
             <Bars3Icon className="h-6 w-6" aria-hidden="true" />
           </button>
-        </div>
-        <div className="hidden lg:flex lg:gap-x-12">
-          {navigation.map((item) => (
-            <a
-              key={item.name}
-              href={item.href}
-              className="text-sm font-semibold leading-6 text-gray-900"
-            >
-              {item.name}
-            </a>
-          ))}
         </div>
 
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
