@@ -31,7 +31,8 @@ function App() {
     const fetchUser = async () => {
       if (getAccessToken()) {
         const storedUser = localStorage.getItem("user");
-        if (!storedUser) {
+        const parsedUser = JSON.parse(storedUser);
+        if (Object.keys(parsedUser).length !== 0) {
           try {
             const parsedUser = JSON.parse(storedUser);
             dispatch({ type: "LOGIN", payload: parsedUser });

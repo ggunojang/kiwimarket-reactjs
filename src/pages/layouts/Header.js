@@ -21,6 +21,10 @@ export default function Header() {
 
   useEffect(() => {
     setUserData(user); // useEffect 훅을 사용하여 user 값이 변경될 때만 setUserData 함수를 호출하도록 합니다.
+
+    console.log("isLogin:", isLogin);
+    console.log("user:", user);
+    console.log("userData:", userData);
   }, [user, isLogin, userData]);
 
   return (
