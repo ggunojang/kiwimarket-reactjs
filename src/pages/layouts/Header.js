@@ -21,7 +21,7 @@ export default function Header() {
 
   useEffect(() => {
     setUserData(user); // useEffect 훅을 사용하여 user 값이 변경될 때만 setUserData 함수를 호출하도록 합니다.
-  }, [user]);
+  }, [user, isLogin, userData]);
 
   return (
     <header className="fixed left-0 right-0 top-0 z-50 bg-white">
@@ -63,7 +63,7 @@ export default function Header() {
         </div>
 
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          {!isLogin && !user ? (
+          {!isLogin ? (
             <>
               <a href="/login" className="text-sm leading-6 text-gray-900">
                 Login
@@ -74,9 +74,7 @@ export default function Header() {
               </a>
             </>
           ) : (
-            <>
-              <Dropdown username={user.user.username} />
-            </>
+            user && user.user && <Dropdown username={user.user.username} />
           )}
         </div>
       </nav>

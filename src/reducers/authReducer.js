@@ -20,7 +20,7 @@ export const authReducer = (state, action) => {
     case "GETUSER":
       return {
         ...state,
-        isLogin: true,
+        isLogin: false,
         user: null,
       };
     case "UPDATE_USER":
