@@ -35,3 +35,23 @@ export const truncateString = (str, num) => {
   }
   return str.slice(0, num) + "...";
 };
+
+// Agent 체크
+export const parseUserAgent = () => {
+  const userAgent = navigator.userAgent;
+  const browserInfo =
+    userAgent.match(
+      /(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i,
+    ) || [];
+  const platformInfo = userAgent.match(/(Mac|Win|Linux|Android|iPhone)/i) || [];
+
+  const browserName = browserInfo[1];
+  const browserVersion = browserInfo[2];
+  const platform = platformInfo[1];
+
+  return {
+    browsername: browserName,
+    browserversion: browserVersion,
+    os: platform,
+  };
+};

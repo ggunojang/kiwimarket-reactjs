@@ -1,4 +1,5 @@
 import axios from "axios";
+import { parseUserAgent } from "../utils/common";
 
 import {
   getAccessToken,
@@ -13,8 +14,11 @@ const url = "http://localhost:8080";
  */
 export const login = async (email, password) => {
   const params = new URLSearchParams();
+  const deviceInfo = JSON.stringify(parseUserAgent());
+
   params.append("email", email);
   params.append("password", password);
+  params.append("device", deviceInfo);
 
   try {
     const { data } = await axios.post(`${url}/api/auth/user-login`, params, {
