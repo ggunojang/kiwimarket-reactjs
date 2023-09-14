@@ -4,9 +4,10 @@ import { truncateString } from "../../utils/common";
 const Card = ({ person }) => {
   const name = truncateString(person.name, 20);
   const email = truncateString(person.email, 19);
+  const id = person.id;
   return (
     <div className="group">
-      <a href="/board/post">
+      <a href={`/market/post/${id}`}>
         <div className="w-full overflow-hidden rounded-xl bg-slate-500">
           <img
             className="w-full transition-all duration-150 group-hover:scale-110"

@@ -15,6 +15,7 @@ import Profile from "./pages/auths/Profile";
 import UpdateProfile from "./pages/auths/ModifyProfile";
 import ForgotPassword from "./pages/auths/ForgotPassword";
 import Cards from "./pages/boards/Cards";
+import List from "./pages/boards/List";
 import Write from "./pages/boards/Write";
 import Post from "./pages/boards/Post";
 
@@ -60,10 +61,11 @@ function App() {
             <Route path="/signup" element={<SignUpForm />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/modify-profile" element={<UpdateProfile />} />
-            {/* 게시판 */}
-            <Route path="/board/list" element={<Cards />} />
-            <Route path="/board/write" element={<Write />} />
-            <Route path="/board/post" element={<Post />} />
+            {/* market 게시판 */}
+            <Route path="/:table/list" element={<Cards />} />
+            <Route path="/:table/write" element={<Write />} />
+            <Route path="/:table/modify/:id" element={<Write />} />
+            <Route path="/:table/post/:id" element={<Post />} />
           </Routes>
           <Footer />
         </div>

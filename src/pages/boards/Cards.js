@@ -4,6 +4,7 @@ import LoadPage from "../../components/LoadPage";
 
 const people = [
   {
+    id: 1,
     name: "Leslie Alexander",
     title:
       "A list of all the users in your account including their name, title, email and role.",
@@ -15,6 +16,7 @@ const people = [
     lastSeenDateTime: "2023-01-23T13:23Z",
   },
   {
+    id: 2,
     name: "Michael Foster",
     title:
       "A list of all the users in your account including their name, title, email and role.",
@@ -26,6 +28,7 @@ const people = [
     lastSeenDateTime: "2023-01-23T13:23Z",
   },
   {
+    id: 3,
     name: "Dries Vincent",
     title:
       "A list of all the users in your account including their name, title, email and role.",
@@ -36,6 +39,7 @@ const people = [
     lastSeen: null,
   },
   {
+    id: 4,
     name: "Lindsay Walton",
     title:
       "A list of all the users in your account including their name, title, email and role.",
@@ -47,6 +51,7 @@ const people = [
     lastSeenDateTime: "2023-01-23T13:23Z",
   },
   {
+    id: 5,
     name: "Michael Foster",
     title:
       "A list of all the users in your account including their name, title, email and role.",
@@ -58,6 +63,7 @@ const people = [
     lastSeenDateTime: "2023-01-23T13:23Z",
   },
   {
+    id: 6,
     name: "Dries Vincent",
     title:
       "A list of all the users in your account including their name, title, email and role.",
@@ -68,6 +74,7 @@ const people = [
     lastSeen: null,
   },
   {
+    id: 7,
     name: "Lindsay Walton",
     title:
       "A list of all the users in your account including their name, title, email and role.",
@@ -79,6 +86,7 @@ const people = [
     lastSeenDateTime: "2023-01-23T13:23Z",
   },
   {
+    id: 8,
     name: "Courtney Henry",
     title:
       "A list of all the users in your account including their name, title, email and role.",
@@ -90,6 +98,7 @@ const people = [
     lastSeenDateTime: "2023-01-23T13:23Z",
   },
   {
+    id: 9,
     name: "Tom Cook",
     title:
       "A list of all the users in your account including their name, title, email and role.",
@@ -100,6 +109,7 @@ const people = [
     lastSeen: null,
   },
   {
+    id: 10,
     name: "Lindsay Walton",
     title:
       "A list of all the users in your account including their name, title, email and role.",
@@ -111,6 +121,7 @@ const people = [
     lastSeenDateTime: "2023-01-23T13:23Z",
   },
   {
+    id: 11,
     name: "Courtney Henry",
     title:
       "A list of all the users in your account including their name, title, email and role.",
@@ -122,6 +133,7 @@ const people = [
     lastSeenDateTime: "2023-01-23T13:23Z",
   },
   {
+    id: 12,
     name: "Tom Cook",
     title:
       "A list of all the users in your account including their name, title, email and role.",
@@ -132,6 +144,7 @@ const people = [
     lastSeen: null,
   },
   {
+    id: 13,
     name: "Leslie Alexander",
     title:
       "A list of all the users in your account including their name, title, email and role.",
@@ -143,6 +156,7 @@ const people = [
     lastSeenDateTime: "2023-01-23T13:23Z",
   },
   {
+    id: 14,
     name: "Michael Foster",
     title:
       "A list of all the users in your account including their name, title, email and role.",
@@ -154,6 +168,7 @@ const people = [
     lastSeenDateTime: "2023-01-23T13:23Z",
   },
   {
+    id: 15,
     name: "Dries Vincent",
     title:
       "A list of all the users in your account including their name, title, email and role.",
@@ -164,6 +179,7 @@ const people = [
     lastSeen: null,
   },
   {
+    id: 16,
     name: "Lindsay Walton",
     title:
       "A list of all the users in your account including their name, title, email and role.",
@@ -175,6 +191,7 @@ const people = [
     lastSeenDateTime: "2023-01-23T13:23Z",
   },
   {
+    id: 17,
     name: "Michael Foster",
     title:
       "A list of all the users in your account including their name, title, email and role.",
@@ -186,6 +203,7 @@ const people = [
     lastSeenDateTime: "2023-01-23T13:23Z",
   },
   {
+    id: 18,
     name: "Dries Vincent",
     title:
       "A list of all the users in your account including their name, title, email and role.",
@@ -196,6 +214,7 @@ const people = [
     lastSeen: null,
   },
   {
+    id: 19,
     name: "Lindsay Walton",
     title:
       "A list of all the users in your account including their name, title, email and role.",
@@ -207,6 +226,7 @@ const people = [
     lastSeenDateTime: "2023-01-23T13:23Z",
   },
   {
+    id: 20,
     name: "Courtney Henry",
     title:
       "A list of all the users in your account including their name, title, email and role.",
@@ -218,6 +238,7 @@ const people = [
     lastSeenDateTime: "2023-01-23T13:23Z",
   },
   {
+    id: 21,
     name: "Tom Cook",
     title:
       "A list of all the users in your account including their name, title, email and role.",
@@ -228,6 +249,7 @@ const people = [
     lastSeen: null,
   },
   {
+    id: 22,
     name: "Lindsay Walton",
     title:
       "A list of all the users in your account including their name, title, email and role.",
@@ -239,6 +261,7 @@ const people = [
     lastSeenDateTime: "2023-01-23T13:23Z",
   },
   {
+    id: 23,
     name: "Courtney Henry",
     title:
       "A list of all the users in your account including their name, title, email and role.",
@@ -250,6 +273,7 @@ const people = [
     lastSeenDateTime: "2023-01-23T13:23Z",
   },
   {
+    id: 24,
     name: "Tom Cook",
     title:
       "A list of all the users in your account including their name, title, email and role.",
@@ -305,7 +329,7 @@ function Cards() {
         </ul>
         <div className="mt-1 flex items-center justify-end border-t border-gray-900/10">
           <a
-            href="/board/write"
+            href="/market/write"
             className="mt-2 justify-center rounded-md px-3 py-1 text-sm font-semibold leading-6 tracking-tight text-black  hover:text-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
             Post >
