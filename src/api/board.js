@@ -8,13 +8,13 @@ const url = "http://localhost:8080";
  * 글등록
  */
 
-export const createPost = async (data) => {
+export const createPost = async (data, table) => {
   const token = getAccessToken();
   const headers = {
     Authorization: `Bearer ${token}`,
   };
   const { data: responseData } = await axios.post(
-    `${url}/api/board/create-post`,
+    `${url}/api/board/insert/${table}`,
     data,
     {
       headers: headers,

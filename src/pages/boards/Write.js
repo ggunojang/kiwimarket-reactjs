@@ -1,11 +1,12 @@
 import React, { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import FileUpload from "../../components/FileUpload"; // FileUpload 컴포넌트를 import
 import AlertModal from "../../components/modals/AlertModal";
 import { createPost } from "../../api/board";
 
 function Write() {
   const navigate = useNavigate();
+  const { table } = useParams();
 
   const titleRef = useRef();
   const contentRef = useRef();
@@ -33,7 +34,7 @@ function Write() {
         data.append(`file${index + 1}`, file);
       });
 
-      const responseData = await createPost(data);
+      const responseData = await createPost(data, table);
       console.log("responseData", responseData);
 
       if (responseData.status) {
