@@ -54,7 +54,7 @@ function Profile() {
         <div className="mt-5 md:mx-auto md:w-full md:max-w-2xl">
           <div className="mt-6 border-t border-gray-100">
             <dl className="divide-y divide-gray-100">
-              <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+              <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                 <dt className="text-sm font-medium leading-6 text-gray-900">
                   User ID
                 </dt>

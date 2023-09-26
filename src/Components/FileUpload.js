@@ -2,8 +2,9 @@
 import React, { useRef } from "react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
-const FileUpload = ({ files, setFiles, MAX_FILES }) => {
+const FileUpload = ({ files, setFiles, MAX_FILES, MAX_FILE_SIZE_MB = 5 }) => {
   const fileInputRef = useRef(null);
+  const MAX_FILE_SIZE = MAX_FILE_SIZE_MB * 1024 * 1024;
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -14,6 +15,10 @@ const FileUpload = ({ files, setFiles, MAX_FILES }) => {
     const droppedFiles = Array.from(e.dataTransfer.files).filter((file) =>
       file.type.startsWith("image/"),
     );
+    if (droppedFiles.some((file) => file.size > MAX_FILE_SIZE)) {
+      alert(`Some files exceed the size limit of ${MAX_FILE_SIZE_MB}MB.`);
+      return;
+    }
     if (files.length + droppedFiles.length > MAX_FILES) {
       alert(`You can only upload up to ${MAX_FILES} files.`);
       return;
@@ -27,6 +32,10 @@ const FileUpload = ({ files, setFiles, MAX_FILES }) => {
 
   const handleFileInputChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
+    if (selectedFiles.some((file) => file.size > MAX_FILE_SIZE)) {
+      alert(`Some files exceed the size limit of ${MAX_FILE_SIZE_MB}MB.`);
+      return;
+    }
     if (files.length + selectedFiles.length > MAX_FILES) {
       alert(`You can only upload up to ${MAX_FILES} files.`);
       return;
@@ -42,7 +51,7 @@ const FileUpload = ({ files, setFiles, MAX_FILES }) => {
       >
         Upload images
         <span className="ml-2 text-xs font-normal text-slate-400">
-          (You can upload up to {MAX_FILES} images only.)
+          (You can upload a maximum of {MAX_FILES} images, each with a size limit of {MAX_FILE_SIZE_MB}MB.)
         </span>
       </label>
       <div className="mt-2">

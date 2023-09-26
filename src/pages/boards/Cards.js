@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import Card from "../../components/cards/Card";
 import LoadPage from "../../components/LoadPage";
+import { getCategory } from "../../api/board";
 
 const people = [
   {
@@ -286,24 +288,60 @@ const people = [
 ];
 
 function Cards() {
+  const { table } = useParams();
+  const [isVisible, setIsVisible] = useState(false);
   const [userData, setUserData] = useState(null);
+  const [categoryData, setCategoryData] = useState(null);
 
   useEffect(() => {
-    setUserData(people);
+    setTimeout(async () => {
+      setIsVisible(true);
+      setUserData(people);
+    }, 500); // 1000ms (1초) 후에 API 요청을 실행합니다.
   }, []);
 
-  if (userData === null) {
+
+  useEffect(() => {
+    let isCancelled = false;
+
+    const fetchCategory = async () => {
+      try {
+        const data = await getCategory(table);
+        if (!isCancelled && data) {
+          setCategoryData(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch category", error);
+      }
+    };
+
+    fetchCategory();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [table]);
+
+
+
+  if (userData === null && categoryData === null) {
     return <LoadPage pagetext="board" />;
   }
-  if (userData !== null) {
+  if (userData !== null && categoryData !== null) {
+    const {
+      data: { category },
+    } = categoryData;
     return (
-      <main className="lg:max-w-5lg mt-14 px-8 py-12 md:mx-auto md:max-w-3xl lg:w-full lg:px-0 xl:mx-auto xl:w-full xl:max-w-6xl">
+      <main
+        className={`lg:max-w-5lg ${
+          isVisible ? "opacity-100" : "opacity-0"
+        } mt-14 px-8 py-12 transition duration-1000 ease-in-out md:mx-auto md:max-w-3xl lg:w-full lg:px-0 xl:mx-auto xl:w-full xl:max-w-6xl`}
+      >
         <div className="mb-10 md:mx-auto md:w-full md:max-w-xl">
           <h2 className="mt-5 text-center text-3xl font-semibold leading-9 tracking-tight text-gray-900">
             중고거래 매물
           </h2>
         </div>
-
         <div className="my-5 flex w-full justify-end ">
           <select
             id="category"
@@ -314,12 +352,14 @@ function Cards() {
             <option value="" disabled>
               지역을 선택하세요.
             </option>
-            <option value="1">category1</option>
-            <option value="2">category2</option>
-            <option value="3">category3</option>
+            {category.map((item) => (
+              <option value={item.bca_id} key={item.bca_id}>
+                {item.margin > 0 ? "- " : ""}
+                {item.bca_value}
+              </option>
+            ))}
           </select>
         </div>
-
         <ul className="mx-auto grid grid-cols-2 gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
           {userData.map((person, index) => (
             <li key={index}>
@@ -329,10 +369,10 @@ function Cards() {
         </ul>
         <div className="mt-1 flex items-center justify-end border-t border-gray-900/10">
           <a
-            href="/market/write"
+            href="/notice/write"
             className="mt-2 justify-center rounded-md px-3 py-1 text-sm font-semibold leading-6 tracking-tight text-black  hover:text-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            Post >
+            Post &gt;
           </a>
         </div>
       </main>
