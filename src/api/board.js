@@ -13,6 +13,7 @@ export const createPost = async (data, table) => {
   const headers = {
     Authorization: `Bearer ${token}`,
   };
+
   const { data: responseData } = await axios.post(
     `${url}/api/board/insert/${table}`,
     data,
@@ -36,6 +37,21 @@ export const getCategory = async (table) => {
       } catch (error) {
         reject(error);
       }
-    }, 500); // 1000ms (1초) 후에 API 요청을 실행합니다.
+    }, 300); // 1몇 초  후에 API 요청을 실행합니다.
+  });
+}
+
+export const getList = async (table) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(async () => {
+      try {
+        const { data: responseData } = await axios.get(
+          `${url}/api/board/list/${table}`,
+        );
+        resolve(responseData);
+      } catch (error) {
+        reject(error);
+      }
+    }, 300); // 몇 초 후에 API 요청을 실행합니다.
   });
 }

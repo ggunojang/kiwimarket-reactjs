@@ -13,22 +13,29 @@ function Write() {
   const contentRef = useRef();
   const categoryRef = useRef(null);
   const [categoryData, setCategoryData] = useState(null);
+  const [configData, setConfigData] = useState(null);
   const [files, setFiles] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [status, setStatus] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
 
   const MAX_FILES = 5; // 최대 파일 개수 설정
+  const listUrl = `/${table}/list`;
 
   useEffect(() => {
     let isCancelled = false;
 
     const fetchCategory = async () => {
       try {
-        const data = await getCategory(table);
-        if (!isCancelled && data) {
-          setCategoryData(data);
+        const {
+          data: { config, category },
+        } = await getCategory(table);
+        
+        if (!isCancelled && config) {
+          setCategoryData(category);
+          setConfigData(config);
         }
+        
       } catch (error) {
         console.error("Failed to fetch category", error);
       }
@@ -49,6 +56,7 @@ function Write() {
 
     try {
       if (files) {
+        console.log(files);
         // 파일 추가
        data = new FormData();
 
@@ -62,8 +70,12 @@ function Write() {
 
       } else {
 
+        const { use_category } = configData;
+
         data = new URLSearchParams();
-        data.append("post_category", categoryRef.current.value);
+        if (use_category) {
+          data.append("post_category", categoryRef.current.value);
+        }
         data.append("post_title", titleRef.current.value);
         data.append("post_content", contentRef.current.value);
 
@@ -87,11 +99,11 @@ function Write() {
     }
   };
 
-  if (categoryData === null) {
+  if (configData === null) {
     return <LoadPage pagetext="Profile" />;
   }
-  if (categoryData !== null) {
-    const { data: { category } } = categoryData;
+  if (configData !== null) {
+    const { use_category } = configData;
     return (
       <main className="mt-14 justify-center px-6 py-12 lg:px-8">
         {showModal && (
@@ -99,6 +111,7 @@ function Write() {
             title="Notice"
             message={modalMessage}
             status={status}
+            listUrl={listUrl}
             onClose={() => setShowModal(false)}
           />
         )}
@@ -114,33 +127,36 @@ function Write() {
             onSubmit={handleSubmit}
             method="POST"
           >
-            <div className="col-span-full">
-              <label
-                htmlFor="category"
-                className="block rounded-md text-sm font-medium leading-6 text-gray-900"
-              >
-                Category
-              </label>
-              <div className="mt-2">
-                <select
-                  id="category"
-                  ref={categoryRef}
-                  defaultValue=""
-                  required
-                  className="w-full rounded-md border border-gray-300 px-4 py-2 pr-8 text-gray-400 shadow-sm md:w-auto"
+            {use_category && (
+              <div className="col-span-full">
+                <label
+                  htmlFor="category"
+                  className="block rounded-md text-sm font-medium leading-6 text-gray-900"
                 >
-                  <option value="" disabled>
-                    Please select a category
-                  </option>
-                  {category.map((item) => (
-                    <option value={item.bca_id} key={item.bca_id}>
-                      {item.margin > 0 ? "- " : ""}
-                      {item.bca_value}
+                  Category
+                </label>
+                <div className="mt-2">
+                  <select
+                    id="category"
+                    name="post_category"
+                    ref={categoryRef}
+                    defaultValue=""
+                    required
+                    className="w-full rounded-md border border-gray-300 px-4 py-2 pr-8 text-gray-400 shadow-sm md:w-auto"
+                  >
+                    <option value="" disabled>
+                      Please select a category
                     </option>
-                  ))}
-                </select>
+                    {categoryData.map((item) => (
+                      <option value={item.bca_id} key={item.bca_id}>
+                        {item.margin > 0 ? "- " : ""}
+                        {item.bca_value}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
-            </div>
+            )}
 
             <div className="col-span-full">
               <label

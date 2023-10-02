@@ -62,7 +62,7 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/modify-profile" element={<UpdateProfile />} />
             {/* market 게시판 */}
-            <Route path="/:table/list" element={<Cards />} />
+            <Route path="/:table/list" element={<List />} />
             <Route path="/:table/write" element={<Write />} />
             <Route path="/:table/modify/:id" element={<Write />} />
             <Route path="/:table/post/:id" element={<Post />} />

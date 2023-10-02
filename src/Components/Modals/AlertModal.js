@@ -6,14 +6,24 @@ import { useNavigate } from "react-router-dom";
 /**
  * 각 모델의 설정이 필요할 듯 싶은데 ~ confirm 으로 확인/아니오 기본 경고 모델 확인 되었다!
  */
-export default function AlertModal({ title, message, status = false, onClose }) {
+export default function AlertModal({
+  title,
+  message,
+  status = false,
+  onClose,
+  listUrl = "/",
+}) {
   const navigate = useNavigate();
   const [open, setOpen] = useState(true);
 
   const useHandleClick = () => {
     onClose(); // 여기에 onClose 호출
     setOpen(false);
-    if (status) navigate("/");
+    console.log("listUrl", listUrl);
+    console.log("status", status);
+    if (status) {
+      navigate(listUrl);
+    }
   };
 
   return (
