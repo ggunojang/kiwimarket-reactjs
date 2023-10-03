@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState, useContext } from "react";
+import { Link, useParams } from "react-router-dom";
 import LoadPage from "../../components/LoadPage";
 import { truncateString } from "../../utils/common";
+import { BoardContext } from "../../contexts/BoardContext";
 
 const people = {
   name: "Leslie Alexander",
@@ -15,12 +16,14 @@ const people = {
   lastSeenDateTime: "2023-01-23T13:23Z",
 };
 function Post() {
-  const { id } = useParams();
+  const { id,table } = useParams();
   const [userData, setUserData] = useState(null);
+  const {
+    state, state: { currentPage },
+  } = useContext(BoardContext);
 
   useEffect(() => {
     setUserData(people);
-    console.log(id);
   }, [id]);
 
   if (userData === null) {
@@ -60,12 +63,12 @@ function Post() {
           </li>
         </ul>
         <div className="mt-1 flex items-center justify-end">
-          <a
-            href="/market/list"
+          <Link
+            to={`/${table}/list`}
             className="mt-2 justify-center rounded-md px-3 py-1 text-sm font-semibold leading-6 tracking-tight text-black  hover:text-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
             List >
-          </a>
+          </Link>
         </div>
       </main>
     );

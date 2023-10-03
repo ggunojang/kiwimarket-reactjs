@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { truncateString } from "../../utils/common";
 
 const Card = ({ person }) => {
@@ -7,7 +8,7 @@ const Card = ({ person }) => {
   const id = person.id;
   return (
     <div className="group">
-      <a href={`/market/post/${id}`}>
+      <Link to={`/market/post/${id}`}>
         <div className="w-full overflow-hidden rounded-xl bg-slate-500">
           <img
             className="w-full transition-all duration-150 group-hover:scale-110"
@@ -29,7 +30,7 @@ const Card = ({ person }) => {
             관심 3 ∙ 조회 435
           </div>
         </div>
-      </a>
+      </Link>
     </div>
   );
 };

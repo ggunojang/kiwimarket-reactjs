@@ -18,6 +18,7 @@ import Cards from "./pages/boards/Cards";
 import List from "./pages/boards/List";
 import Write from "./pages/boards/Write";
 import Post from "./pages/boards/Post";
+import ScrollToTop from "./components/ScrollToTop";
 
 /**
  * 사용자 프로파일을 별도로 저장을 해야합니다.!
@@ -50,6 +51,7 @@ function App() {
   return (
     <div className="App mx-auto w-full bg-gray-50">
       <BrowserRouter>
+        <ScrollToTop/>
         <div className="flex-1 grid-flow-row flex-col justify-center">
           <Header />
           <Routes>

@@ -1,32 +1,14 @@
 export const initialState = {
-  isLogin: false,
-  data: null,
+  currentPage: 1,
 };
 
-export const authReducer = (state, action) => {
+export const boardReducer = (state, action) => {
   switch (action.type) {
-    case "LOGIN":
+    case "SET_PAGE":
+      console.log("SET_PAGE", action.payload);
       return {
         ...state,
-        isLogin: true,
-        user: action.payload,
-      };
-    case "LOGOUT":
-      return {
-        ...state,
-        isLogin: false,
-        user: null,
-      };
-    case "GETUSER":
-      return {
-        ...state,
-        isLogin: false,
-        user: null,
-      };
-    case "UPDATE_USER":
-      return {
-        ...state,
-        user: action.payload, // user 필드를 액션의 payload로 업데이트합니다.
+        currentPage: action.payload,
       };
     default:
       return state;

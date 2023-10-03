@@ -100,7 +100,7 @@ function Write() {
   };
 
   if (configData === null) {
-    return <LoadPage pagetext="Profile" />;
+    return <LoadPage pagetext="Write post" />;
   }
   if (configData !== null) {
     const { use_category } = configData;

@@ -37,21 +37,21 @@ export const getCategory = async (table) => {
       } catch (error) {
         reject(error);
       }
-    }, 300); // 1몇 초  후에 API 요청을 실행합니다.
+    }, 200); // 1몇 초  후에 API 요청을 실행합니다.
   });
 }
 
-export const getList = async (table) => {
+export const getList = async (table, currentPage) => {
   return new Promise((resolve, reject) => {
     setTimeout(async () => {
       try {
         const { data: responseData } = await axios.get(
-          `${url}/api/board/list/${table}`,
+          `${url}/api/board/list/${table}?page=${currentPage}`,
         );
         resolve(responseData);
       } catch (error) {
         reject(error);
       }
-    }, 300); // 몇 초 후에 API 요청을 실행합니다.
+    }, 200); // 몇 초 후에 API 요청을 실행합니다.
   });
-}
+};

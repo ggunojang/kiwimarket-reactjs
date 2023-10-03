@@ -3,7 +3,7 @@ import { boardReducer, initialState } from "../reducers/boardReducer";
 
 export const BoardContext = createContext();
 
-export const AuthProvider = ({ children }) => {
+export const BoardProvider = ({ children }) => {
   const [state, dispatch] = useReducer(boardReducer, initialState);
   return (
     <BoardContext.Provider value={{ state, dispatch }}>

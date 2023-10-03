@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { AuthContext } from "../../contexts/AuthContext";
@@ -30,23 +31,23 @@ export default function Header() {
         aria-label="Global"
       >
         <div className="flex items-center ">
-          <a href="/" className="-m-1.5 p-1.5">
+          <Link to="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
             <img
               className="h-8 w-auto"
               src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
               alt=""
             />
-          </a>
+          </Link>
           <div className="ml-14 hidden lg:flex lg:gap-x-10 xl:ml-14">
             {navigation.map((item) => (
-              <a
+              <Link
                 key={item.name}
-                href={item.href}
+                to={item.href}
                 className="text-md font-semibold leading-6 text-gray-900"
               >
                 {item.name}
-              </a>
+              </Link>
             ))}
           </div>
         </div>
@@ -65,13 +66,13 @@ export default function Header() {
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           {!isLogin ? (
             <>
-              <a href="/login" className="text-sm leading-6 text-gray-900">
+              <Link to="/login" className="text-sm leading-6 text-gray-900">
                 Login
-              </a>
+              </Link>
               <div className="px-2">|</div>
-              <a href="/signup" className="text-sm leading-6 text-gray-900">
+              <Link to="/signup" className="text-sm leading-6 text-gray-900">
                 Register
-              </a>
+              </Link>
             </>
           ) : (
             user && user.user && <Dropdown username={user.user.username} />
@@ -88,14 +89,14 @@ export default function Header() {
         <div className="fixed inset-0 z-50" />
         <Dialog.Panel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div className="flex items-center justify-between">
-            <a href="http://" className="-m-1.5 p-1.5">
+            <Link to="http://" className="-m-1.5 p-1.5">
               <span className="sr-only">Your Company</span>
               <img
                 className="h-8 w-auto"
                 src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
                 alt=""
               />
-            </a>
+            </Link>
             <button
               type="button"
               className="-m-2.5 rounded-md p-2.5 text-gray-700"
@@ -109,38 +110,38 @@ export default function Header() {
             <div className="-my-6 divide-y divide-gray-500/10">
               <div className="space-y-2 py-6">
                 {navigation.map((item) => (
-                  <a
+                  <Link
                     key={item.name}
-                    href={item.href}
+                    to={item.href}
                     className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                   >
                     {item.name}
-                  </a>
+                  </Link>
                 ))}
               </div>
               <div className="py-6">
                 {!isLogin ? (
                   <>
-                    <a
-                      href="/login"
+                    <Link
+                      to="/login"
                       className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                     >
                       Log in
-                    </a>
-                    <a
-                      href="/signup"
+                    </Link>
+                    <Link
+                      to="/signup"
                       className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                     >
                       Register
-                    </a>
+                    </Link>
                   </>
                 ) : (
-                  <a
-                    href="/logout"
+                  <Link
+                    to="/logout"
                     className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                   >
                     Log out
-                  </a>
+                  </Link>
                 )}
               </div>
             </div>
