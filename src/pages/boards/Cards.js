@@ -1,341 +1,91 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import Card from "../../components/cards/Card";
+import React, { useState, useEffect, useContext } from "react";
+import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import LoadPage from "../../components/LoadPage";
-import { getCategory } from "../../api/board";
+import Pagination from "../../components/Pagination";
+import { getList } from "../../api/board";
+import { BoardContext } from "../../contexts/BoardContext";
+import Card from "../../components/cards/Card";
 
-const people = [
-  {
-    id: 1,
-    name: "Leslie Alexander",
-    title:
-      "A list of all the users in your account including their name, title, email and role.",
-    email: "leslie.alexander@example.com",
-    role: "Co-Founder / CEO",
-    imageUrl:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    lastSeen: "3h ago",
-    lastSeenDateTime: "2023-01-23T13:23Z",
-  },
-  {
-    id: 2,
-    name: "Michael Foster",
-    title:
-      "A list of all the users in your account including their name, title, email and role.",
-    email: "michael.foster@example.com",
-    role: "Co-Founder / CTO",
-    imageUrl:
-      "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    lastSeen: "3h ago",
-    lastSeenDateTime: "2023-01-23T13:23Z",
-  },
-  {
-    id: 3,
-    name: "Dries Vincent",
-    title:
-      "A list of all the users in your account including their name, title, email and role.",
-    email: "dries.vincent@example.com",
-    role: "Business Relations",
-    imageUrl:
-      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    lastSeen: null,
-  },
-  {
-    id: 4,
-    name: "Lindsay Walton",
-    title:
-      "A list of all the users in your account including their name, title, email and role.",
-    email: "lindsay.walton@example.com",
-    role: "Front-end Developer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    lastSeen: "3h ago",
-    lastSeenDateTime: "2023-01-23T13:23Z",
-  },
-  {
-    id: 5,
-    name: "Michael Foster",
-    title:
-      "A list of all the users in your account including their name, title, email and role.",
-    email: "michael.foster@example.com",
-    role: "Co-Founder / CTO",
-    imageUrl:
-      "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    lastSeen: "3h ago",
-    lastSeenDateTime: "2023-01-23T13:23Z",
-  },
-  {
-    id: 6,
-    name: "Dries Vincent",
-    title:
-      "A list of all the users in your account including their name, title, email and role.",
-    email: "dries.vincent@example.com",
-    role: "Business Relations",
-    imageUrl:
-      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    lastSeen: null,
-  },
-  {
-    id: 7,
-    name: "Lindsay Walton",
-    title:
-      "A list of all the users in your account including their name, title, email and role.",
-    email: "lindsay.walton@example.com",
-    role: "Front-end Developer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    lastSeen: "3h ago",
-    lastSeenDateTime: "2023-01-23T13:23Z",
-  },
-  {
-    id: 8,
-    name: "Courtney Henry",
-    title:
-      "A list of all the users in your account including their name, title, email and role.",
-    email: "courtney.henry@example.com",
-    role: "Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    lastSeen: "3h ago",
-    lastSeenDateTime: "2023-01-23T13:23Z",
-  },
-  {
-    id: 9,
-    name: "Tom Cook",
-    title:
-      "A list of all the users in your account including their name, title, email and role.",
-    email: "tom.cook@example.com",
-    role: "Director of Product",
-    imageUrl:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    lastSeen: null,
-  },
-  {
-    id: 10,
-    name: "Lindsay Walton",
-    title:
-      "A list of all the users in your account including their name, title, email and role.",
-    email: "lindsay.walton@example.com",
-    role: "Front-end Developer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    lastSeen: "3h ago",
-    lastSeenDateTime: "2023-01-23T13:23Z",
-  },
-  {
-    id: 11,
-    name: "Courtney Henry",
-    title:
-      "A list of all the users in your account including their name, title, email and role.",
-    email: "courtney.henry@example.com",
-    role: "Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    lastSeen: "3h ago",
-    lastSeenDateTime: "2023-01-23T13:23Z",
-  },
-  {
-    id: 12,
-    name: "Tom Cook",
-    title:
-      "A list of all the users in your account including their name, title, email and role.",
-    email: "tom.cook@example.com",
-    role: "Director of Product",
-    imageUrl:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    lastSeen: null,
-  },
-  {
-    id: 13,
-    name: "Leslie Alexander",
-    title:
-      "A list of all the users in your account including their name, title, email and role.",
-    email: "leslie.alexander@example.com",
-    role: "Co-Founder / CEO",
-    imageUrl:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    lastSeen: "3h ago",
-    lastSeenDateTime: "2023-01-23T13:23Z",
-  },
-  {
-    id: 14,
-    name: "Michael Foster",
-    title:
-      "A list of all the users in your account including their name, title, email and role.",
-    email: "michael.foster@example.com",
-    role: "Co-Founder / CTO",
-    imageUrl:
-      "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    lastSeen: "3h ago",
-    lastSeenDateTime: "2023-01-23T13:23Z",
-  },
-  {
-    id: 15,
-    name: "Dries Vincent",
-    title:
-      "A list of all the users in your account including their name, title, email and role.",
-    email: "dries.vincent@example.com",
-    role: "Business Relations",
-    imageUrl:
-      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    lastSeen: null,
-  },
-  {
-    id: 16,
-    name: "Lindsay Walton",
-    title:
-      "A list of all the users in your account including their name, title, email and role.",
-    email: "lindsay.walton@example.com",
-    role: "Front-end Developer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    lastSeen: "3h ago",
-    lastSeenDateTime: "2023-01-23T13:23Z",
-  },
-  {
-    id: 17,
-    name: "Michael Foster",
-    title:
-      "A list of all the users in your account including their name, title, email and role.",
-    email: "michael.foster@example.com",
-    role: "Co-Founder / CTO",
-    imageUrl:
-      "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    lastSeen: "3h ago",
-    lastSeenDateTime: "2023-01-23T13:23Z",
-  },
-  {
-    id: 18,
-    name: "Dries Vincent",
-    title:
-      "A list of all the users in your account including their name, title, email and role.",
-    email: "dries.vincent@example.com",
-    role: "Business Relations",
-    imageUrl:
-      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    lastSeen: null,
-  },
-  {
-    id: 19,
-    name: "Lindsay Walton",
-    title:
-      "A list of all the users in your account including their name, title, email and role.",
-    email: "lindsay.walton@example.com",
-    role: "Front-end Developer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    lastSeen: "3h ago",
-    lastSeenDateTime: "2023-01-23T13:23Z",
-  },
-  {
-    id: 20,
-    name: "Courtney Henry",
-    title:
-      "A list of all the users in your account including their name, title, email and role.",
-    email: "courtney.henry@example.com",
-    role: "Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    lastSeen: "3h ago",
-    lastSeenDateTime: "2023-01-23T13:23Z",
-  },
-  {
-    id: 21,
-    name: "Tom Cook",
-    title:
-      "A list of all the users in your account including their name, title, email and role.",
-    email: "tom.cook@example.com",
-    role: "Director of Product",
-    imageUrl:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    lastSeen: null,
-  },
-  {
-    id: 22,
-    name: "Lindsay Walton",
-    title:
-      "A list of all the users in your account including their name, title, email and role.",
-    email: "lindsay.walton@example.com",
-    role: "Front-end Developer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    lastSeen: "3h ago",
-    lastSeenDateTime: "2023-01-23T13:23Z",
-  },
-  {
-    id: 23,
-    name: "Courtney Henry",
-    title:
-      "A list of all the users in your account including their name, title, email and role.",
-    email: "courtney.henry@example.com",
-    role: "Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    lastSeen: "3h ago",
-    lastSeenDateTime: "2023-01-23T13:23Z",
-  },
-  {
-    id: 24,
-    name: "Tom Cook",
-    title:
-      "A list of all the users in your account including their name, title, email and role.",
-    email: "tom.cook@example.com",
-    role: "Director of Product",
-    imageUrl:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    lastSeen: null,
-  },
-];
-
-function Cards() {
+const Cards = () => {
   const { table } = useParams();
-  const [isVisible, setIsVisible] = useState(false);
-  const [userData, setUserData] = useState(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const {
+    state,
+    state: { currentPage },
+  } = useContext(BoardContext);
+  const [listData, setListData] = useState(null);
+  const [perPage, setPerPage] = useState(10);
+  const [totalPage, setTotalPage] = useState(0);
   const [categoryData, setCategoryData] = useState(null);
-
-  useEffect(() => {
-    setTimeout(async () => {
-      setIsVisible(true);
-      setUserData(people);
-    }, 500); // 1000ms (1초) 후에 API 요청을 실행합니다.
-  }, []);
-
+  const [isVisible, setIsVisible] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("");
 
   useEffect(() => {
     let isCancelled = false;
 
-    const fetchCategory = async () => {
+    const fetchCategory = async (category = "") => {
       try {
-        const data = await getCategory(table);
+        const data = await getList(table, currentPage, category);
+
+        // 데이터 호출
         if (!isCancelled && data) {
-          setCategoryData(data);
+          // 총데이터
+          setListData(data);
+
+          // 페이지네이션
+          const {
+            data: {
+              view: { pager },
+            },
+          } = data;
+          setPerPage(pager.perPage);
+
+          // 총게시물 갯수
+          setTotalPage(pager.totalPage);
+
+          //카테고리
+          const {
+            data: {
+              view: { category },
+            },
+          } = data;
+          setCategoryData(category);
         }
       } catch (error) {
         console.error("Failed to fetch category", error);
       }
     };
 
-    fetchCategory();
+    fetchCategory( selectedCategory);
 
     return () => {
       isCancelled = true;
     };
-  }, [table]);
+  }, [table, currentPage, selectedCategory]);
 
+  
+  const handlePageChange = (page) => {
+    if (page !== currentPage) {
+      setListData(null); // 리스트 데이터 초기화 시키면 pageLoad를 불러들인다. 어떤게 좋을지 고민해
+      navigate(`/${table}/list?page=${page}`);
+    }
+  };
 
-
-  if (userData === null && categoryData === null) {
-    return <LoadPage pagetext="board" />;
+  if (listData === null) {
+    return <LoadPage pagetext="Market" />;
   }
-  if (userData !== null && categoryData !== null) {
+  if (listData !== null) {
     const {
-      data: { category },
-    } = categoryData;
+      data: {
+        view: { data },
+      },
+    } = listData;
+
+    const { list, total_rows } = data;
     return (
       <main
-        className={`lg:max-w-5lg ${
-          isVisible ? "opacity-100" : "opacity-0"
-        } mt-14 px-8 py-12 transition duration-1000 ease-in-out md:mx-auto md:max-w-3xl lg:w-full lg:px-0 xl:mx-auto xl:w-full xl:max-w-6xl`}
+        className={`lg:max-w-5lg mt-14 px-8 py-12 transition duration-1000 ease-in-out md:mx-auto md:max-w-3xl lg:w-full lg:px-0 xl:mx-auto xl:w-full xl:max-w-6xl`}
       >
         <div className="mb-10 md:mx-auto md:w-full md:max-w-xl">
           <h2 className="mt-5 text-center text-3xl font-semibold leading-9 tracking-tight text-gray-900">
@@ -348,12 +98,16 @@ function Cards() {
             defaultValue=""
             required
             className="block w-full rounded-md border border-gray-300 p-2.5 text-gray-400 shadow-sm sm:px-4 md:w-auto"
+            onChange={(e) => setSelectedCategory(e.target.value)}
           >
-            <option value="" disabled>
+            <option disabled>
               지역을 선택하세요.
             </option>
-            {category.map((item) => (
-              <option value={item.bca_id} key={item.bca_id}>
+            <option value="">
+              전체
+            </option>
+            {categoryData.map((item) => (
+              <option value={item.bca_key} key={item.bca_id}>
                 {item.margin > 0 ? "- " : ""}
                 {item.bca_value}
               </option>
@@ -361,19 +115,32 @@ function Cards() {
           </select>
         </div>
         <ul className="mx-auto grid grid-cols-2 gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
-          {userData.map((person, index) => (
-            <li key={index}>
-              <Card person={person} />
-            </li>
-          ))}
+          {list && list.length > 0 ? (
+            list.map((value) => (
+              <li key={value.post_id}>
+                <Card data={value} />
+              </li>
+            ))
+          ) : (
+            <div>내용이 없습니다.</div>
+          )}
         </ul>
-        <div className="mt-1 flex items-center justify-end border-t border-gray-900/10">
-          <a
-            href="/notice/write"
+        <div className="mx-auto mt-10 grid grid-cols-1 gap-10">
+          <Pagination
+            currentPage={currentPage}
+            perPage={perPage}
+            totalPage={totalPage}
+            totalRows={total_rows}
+            onPageChange={handlePageChange}
+          />
+        </div>
+        <div className="mx-auto flex justify-end">
+          <Link
+            to={`/${table}/write`}
             className="mt-2 justify-center rounded-md px-3 py-1 text-sm font-semibold leading-6 tracking-tight text-black  hover:text-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
             Post &gt;
-          </a>
+          </Link>
         </div>
       </main>
     );

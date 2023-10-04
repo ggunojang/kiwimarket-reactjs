@@ -55,3 +55,19 @@ export const parseUserAgent = () => {
     os: platform,
   };
 };
+
+// 줄바꿈 체크
+export const NewlineText = ({ text }) => {
+  const newText = text.split("\n").map((str, index, array) =>
+    index === array.length - 1 ? (
+      str
+    ) : (
+      <>
+        {str}
+        <br />
+      </>
+    ),
+  );
+
+  return <>{newText}</>;
+}

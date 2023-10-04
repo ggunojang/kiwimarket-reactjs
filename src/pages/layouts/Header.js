@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { AuthContext } from "../../contexts/AuthContext";
@@ -7,8 +6,8 @@ import { AuthContext } from "../../contexts/AuthContext";
 import Dropdown from "../../components/dropdowns/Dropdown";
 
 const navigation = [
-  { name: "Market", href: "/notice/list" },
-  { name: "Features", href: "#" },
+  { name: "Notice", href: "/notice/list" },
+  { name: "Market", href: "/market/list" },
   { name: "Marketplace", href: "#" },
   { name: "Company", href: "#" },
 ];
@@ -31,23 +30,23 @@ export default function Header() {
         aria-label="Global"
       >
         <div className="flex items-center ">
-          <Link to="/" className="-m-1.5 p-1.5">
+          <a href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
             <img
               className="h-8 w-auto"
               src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
               alt=""
             />
-          </Link>
+          </a>
           <div className="ml-14 hidden lg:flex lg:gap-x-10 xl:ml-14">
             {navigation.map((item) => (
-              <Link
+              <a
                 key={item.name}
-                to={item.href}
+                href={item.href}
                 className="text-md font-semibold leading-6 text-gray-900"
               >
                 {item.name}
-              </Link>
+              </a>
             ))}
           </div>
         </div>
@@ -66,13 +65,13 @@ export default function Header() {
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           {!isLogin ? (
             <>
-              <Link to="/login" className="text-sm leading-6 text-gray-900">
+              <a href="/login" className="text-sm leading-6 text-gray-900">
                 Login
-              </Link>
+              </a>
               <div className="px-2">|</div>
-              <Link to="/signup" className="text-sm leading-6 text-gray-900">
+              <a href="/signup" className="text-sm leading-6 text-gray-900">
                 Register
-              </Link>
+              </a>
             </>
           ) : (
             user && user.user && <Dropdown username={user.user.username} />
@@ -89,14 +88,14 @@ export default function Header() {
         <div className="fixed inset-0 z-50" />
         <Dialog.Panel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div className="flex items-center justify-between">
-            <Link to="http://" className="-m-1.5 p-1.5">
+            <a href="http://" className="-m-1.5 p-1.5">
               <span className="sr-only">Your Company</span>
               <img
                 className="h-8 w-auto"
                 src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
                 alt=""
               />
-            </Link>
+            </a>
             <button
               type="button"
               className="-m-2.5 rounded-md p-2.5 text-gray-700"
@@ -110,38 +109,38 @@ export default function Header() {
             <div className="-my-6 divide-y divide-gray-500/10">
               <div className="space-y-2 py-6">
                 {navigation.map((item) => (
-                  <Link
+                  <a
                     key={item.name}
-                    to={item.href}
+                    href={item.href}
                     className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                   >
                     {item.name}
-                  </Link>
+                  </a>
                 ))}
               </div>
               <div className="py-6">
                 {!isLogin ? (
                   <>
-                    <Link
-                      to="/login"
+                    <a
+                      href="/login"
                       className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                     >
                       Log in
-                    </Link>
-                    <Link
-                      to="/signup"
+                    </a>
+                    <a
+                      href="/signup"
                       className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                     >
                       Register
-                    </Link>
+                    </a>
                   </>
                 ) : (
-                  <Link
-                    to="/logout"
+                  <a
+                    href="/logout"
                     className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                   >
                     Log out
-                  </Link>
+                  </a>
                 )}
               </div>
             </div>

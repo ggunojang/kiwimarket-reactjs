@@ -25,7 +25,6 @@ export const createPost = async (data, table) => {
   return responseData;
 };
 
-
 export const getCategory = async (table) => {
   return new Promise((resolve, reject) => {
     setTimeout(async () => {
@@ -41,12 +40,12 @@ export const getCategory = async (table) => {
   });
 }
 
-export const getList = async (table, currentPage) => {
+export const getList = async (table, currentPage = 1, category = '') => {
   return new Promise((resolve, reject) => {
     setTimeout(async () => {
       try {
-        const { data: responseData } = await axios.get(
-          `${url}/api/board/list/${table}?page=${currentPage}`,
+        const { data, data: responseData } = await axios.get(
+          `${url}/api/board/list/${table}?page=${currentPage}&category=${category}`,
         );
         resolve(responseData);
       } catch (error) {
@@ -55,3 +54,18 @@ export const getList = async (table, currentPage) => {
     }, 200); // 몇 초 후에 API 요청을 실행합니다.
   });
 };
+
+export const getPost = async (table, currentId) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(async () => {
+      try {
+        const { data: responseData } = await axios.get(
+          `${url}/api/board/post/${table}/${currentId}`,
+        );
+        resolve(responseData);
+      } catch (error) {
+        reject(error);
+      }
+    }, 200); // 몇 초 후에 API 요청을 실행합니다.
+  });
+}

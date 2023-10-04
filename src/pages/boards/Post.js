@@ -1,46 +1,88 @@
 import React, { useEffect, useState, useContext } from "react";
 import { Link, useParams } from "react-router-dom";
+import { Navigation, Pagination, A11y } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+
 import LoadPage from "../../components/LoadPage";
 import { truncateString } from "../../utils/common";
+import { getPost } from "../../api/board";
 import { BoardContext } from "../../contexts/BoardContext";
 
-const people = {
-  name: "Leslie Alexander",
-  title:
-    "A list of all the users in your account including their name, title, email and role.",
-  email: "leslie.alexander@example.com",
-  role: "Co-Founder / CEO",
-  imageUrl:
-    "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=1024&h=1024&q=80",
-  lastSeen: "3h ago",
-  lastSeenDateTime: "2023-01-23T13:23Z",
-};
-function Post() {
-  const { id,table } = useParams();
-  const [userData, setUserData] = useState(null);
-  const {
-    state, state: { currentPage },
-  } = useContext(BoardContext);
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
+function Post() {
+  const { id, table } = useParams();
+  const [postData, setPostData] = useState(null);
+  const {
+    state: { currentPage },
+  } = useContext(BoardContext);
+/*
   useEffect(() => {
     setUserData(people);
   }, [id]);
+*/
+  
+  useEffect(() => {
+    let isCancelled = false;
 
-  if (userData === null) {
-    return <LoadPage pagetext="board" />;
+    const fetchCategory = async () => {
+      try {
+        const {
+          data,
+          data: {
+            view, view: { post },
+          },
+        } = await getPost(table, id);
+        if (!isCancelled && data) {
+          setPostData(post);
+        }
+      } catch (error) {
+        console.error("Failed to fetch category", error);
+      }
+    };
+
+    fetchCategory();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [table, id, currentPage]);
+
+
+  if (postData === null) {
+    return <LoadPage pagetext="post" />;
   }
-  if (userData !== null) {
-    const name = truncateString(userData.name, 40);
-    const email = truncateString(userData.email, 40);
+  if (postData !== null) {
+    const name = truncateString(postData.post_nickname, 40);
+    const email = truncateString(postData.post_email, 40);
+    const list = postData?.images?.list;
+
     return (
       <main className="lg:max-w-5lg mt-20 px-8 py-12 md:mx-auto md:max-w-3xl lg:w-full lg:px-0 xl:mx-auto xl:w-full xl:max-w-4xl">
-        <div>
-          <img
-            className="mx-auto w-full rounded-3xl transition-all duration-150"
-            src={userData.imageUrl}
-            alt={userData.title}
-          />
-        </div>
+        {list && list.length > 0 && (
+          <Swiper
+            modules={[Navigation, Pagination, A11y]}
+            spaceBetween={50}
+            slidesPerView={1}
+            navigation
+            pagination={{ clickable: true }}
+            onSlideChange={() => console.log("slide change")}
+            onSwiper={(swiper) => console.log(swiper)}
+          >
+            {list.map((value) => (
+              <SwiperSlide key={value.pfi_id}>
+                <img
+                  className="mx-auto w-full rounded-3xl transition-all duration-150"
+                  src={value.pfi_image}
+                  alt={postData.post_title}
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        )}
+
         <ul className="mx-auto mt-5 grid grid-cols-1">
           <li>{name}</li>
           <li>
@@ -49,17 +91,26 @@ function Post() {
         </ul>
         <ul className="mx-auto mt-5 grid grid-cols-1 gap-4 border-b border-t py-8">
           <li>
-            <h2 className="text-xl font-semibold tracking-tight">
-              {userData.title}
+            <h2 className="text-xl font-bold tracking-tight ">
+              {postData.post_title}
             </h2>
-            <span className="text-xs text-gray-400">생활가전 - 1일전</span>
+            <span className="text-xs text-gray-400">
+              {postData.category.bca_value} - {postData.post_datetime}
+            </span>
           </li>
           <li className="text-lg font-semibold tracking-tight">
             $300 <span className="text-xs text-gray-400">NZD</span>
           </li>
-          <li>{userData.role}</li>
           <li>
-            <span className="text-xs text-gray-400">관심 3 ∙ 조회 300</span>
+            <div
+              className="text-sm font-normal leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: postData.post_content }}
+            />
+          </li>
+          <li>
+            <span className="text-xs text-gray-400">
+              관심 {postData.post_like} ∙ 조회 {postData.post_hit}
+            </span>
           </li>
         </ul>
         <div className="mt-1 flex items-center justify-end">
