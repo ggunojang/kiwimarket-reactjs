@@ -2,15 +2,16 @@ import React from "react";
 import { Link, useParams } from "react-router-dom";
 import { truncateString } from "../../utils/common";
 
-const Card = ({ data }) => {
+const Card = ({ data, paramTable = 'notice' }) => {
   const { table } = useParams();
-    const name = truncateString(data.post_nickname, 40);
-    const email = truncateString(data.post_email, 40);
-    const title = truncateString(data.post_title, 18);
+  const currentTable = table ? table : paramTable;
+  const name = truncateString(data.post_nickname, 40);
+  const email = truncateString(data.post_email, 40);
+  const title = truncateString(data.post_title, 18);
   const id = data.post_id;
   return (
     <div className="group">
-      <Link to={`/${table}/post/${id}`}>
+      <Link to={`/${currentTable}/post/${id}`}>
         <div className="w-full overflow-hidden rounded-xl bg-slate-500">
           <img
             className="w-full transition-all duration-150 group-hover:scale-110"

@@ -16,7 +16,7 @@ const Pagination = ({
 
   const handlePageClick = (page) => {
     if (page > 0 && page <= totalPage) {
-      dispatch({ type: "SET_PAGE", payload: page });
+      dispatch({ type: "SET_CURRENT_PAGE", payload: page });
       onPageChange(page);
     }
   };

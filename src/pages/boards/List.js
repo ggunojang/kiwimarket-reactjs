@@ -1,84 +1,27 @@
-import React, { useState, useEffect, useContext } from "react";
-import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
-import LoadPage from "../../components/LoadPage";
+import React, { useContext } from "react";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import Pagination from "../../components/Pagination";
-import { getList } from "../../api/board";
 import { BoardContext } from "../../contexts/BoardContext";
 
 const List = () => {
   const { table } = useParams();
-  const navigate = useNavigate(); 
-  const location = useLocation();
+  const navigate = useNavigate();
+  const { dispatch } = useContext(BoardContext);
   const {
     state,
-    state: { currentPage },
+    state: { currentPage, categoryData, pagerData, listData },
   } = useContext(BoardContext);
-  const [listData, setListData] = useState(null);
-  const [perPage, setPerPage] = useState(10);
-  const [totalPage, setTotalPage] = useState(0);
-  const [categoryData, setCategoryData] = useState(null);
 
-  useEffect(() => {
-    let isCancelled = false;
-
-    const fetchCategory = async () => {
-      try {
-        const data = await getList(table, currentPage);
-
-        // 데이터 호출
-        if (!isCancelled && data) {
-          // 총데이터
-          setListData(data);
-
-          // 페이지네이션
-          const {
-            data: {
-              view: { pager },
-            },
-          } = data;
-          setPerPage(pager.perPage);
-
-          // 총게시물 갯수
-          setTotalPage(pager.totalPage);
-
-          //카테고리
-          const {
-            data: {
-              view: { category },
-            },
-          } = data;
-          setCategoryData(category);
-        }
-      } catch (error) {
-        console.error("Failed to fetch category", error);
-      }
-    };
-
-    fetchCategory();
-
-    return () => {
-      isCancelled = true;
-    };
-  }, [table, currentPage]);
 
   const handlePageChange = (page) => {
     if (page !== currentPage) {
-      setListData(null); // 리스트 데이터 초기화 시키면 pageLoad를 불러들인다. 어떤게 좋을지 고민해
-      navigate(`/notice/list?page=${page}`);
+      //dispatch({ type: "SET_LIST", payload: null }); // 리스트 데이터 초기화 시키면 pageLoad를 불러들인다. 어떤게 좋을지 고민해
+      navigate(`/${table}/list?page=${page}`);
     }
   };
 
-  if (listData === null) {
-    return <LoadPage pagetext="board" />;
-  }
-  if (listData !== null) {
-    const {
-      data: {
-        view: { data },
-      },
-    } = listData;
-    
-    const { list, total_rows } = data;
+  if (state) {
+    const { list } = listData;
     return (
       <main className=" mt-10 justify-center bg-slate-50 py-12 sm:px-6 lg:px-8">
         <div className=" sm:mx-auto sm:w-full sm:max-w-sm">
@@ -92,7 +35,10 @@ const List = () => {
               id="category"
               defaultValue=""
               required
-              className="block w-full rounded-md border border-gray-300 p-2 text-gray-400 shadow-sm sm:px-2 md:w-auto"
+              className="block w-full rounded-md border border-gray-300 p-2.5 text-gray-400 shadow-sm sm:px-4 md:w-auto"
+              onChange={(e) =>
+                dispatch({ type: "SET_CATEGORY", payload: e.target.value })
+              }
             >
               <option value="" disabled>
                 지역을 선택하세요.
@@ -144,11 +90,10 @@ const List = () => {
                       </div>
                     </li>
                   </ul>
-                )) 
+                ))
               ) : (
                 <div>내용이 없습니다.</div>
               )}
-              
             </li>
           </ul>
         </div>
@@ -156,9 +101,9 @@ const List = () => {
           <div className="w-full divide-y divide-gray-100 sm:px-0">
             <Pagination
               currentPage={currentPage}
-              perPage={perPage}
-              totalPage={totalPage}
-              totalRows={total_rows}
+              perPage={pagerData.perPage}
+              totalPage={pagerData.totalPage}
+              totalRows={listData.total_rows}
               onPageChange={handlePageChange}
             />
           </div>
@@ -174,6 +119,6 @@ const List = () => {
       </main>
     );
   }
-}
+};
 
 export default List;
