@@ -24,13 +24,14 @@ const Board = () => {
         const setData = await getList(table, currentPage, currentCategory);
         // 데이터 호출
         if (!isCancelled && setData) {
-          setAllData(setData);
 
           const {
             data: {
               view: { pager, category, board_meta, listData },
             },
           } = setData;
+
+          setAllData(setData);
 
           dispatch({ type: "SET_LIST", payload: listData });
 

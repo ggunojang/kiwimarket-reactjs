@@ -17,8 +17,8 @@ const Gallery = () => {
 
   const handlePageChange = (page) => {
     if (page !== currentPage) {
-      //dispatch({ type: "SET_LIST", payload: null }); // 리스트 데이터 초기화 시키면 pageLoad를 불러들인다. 어떤게 좋을지 고민해
       navigate(`/${table}/list?page=${page}`);
+      //dispatch({ type: "SET_LIST", payload: null }); // 리스트 데이터 초기화 시키면 pageLoad를 불러들인다. 어떤게 좋을지 고민해
     }
   };
 

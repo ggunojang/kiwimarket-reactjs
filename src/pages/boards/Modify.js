@@ -78,7 +78,7 @@ const Modify = () => {
         data = new FormData();
 
         files.forEach((file, index) => {
-          data.append(`post_file_update[${index}]`, file);
+          data.append(`post_file[${index}]`, file);
         });
 
         selectedIds.forEach((id) => {

@@ -32,12 +32,14 @@ export const updatePost = async (data, table, id) => {
   };
 
   const { data: responseData } = await axios.post(
-    `${url}/api/board/insert/${table}/${id}`,
+    `${url}/api/board/update/${table}/${id}`,
     data,
     {
       headers: headers,
     },
   );
+
+  console.log(responseData);
 
   return responseData;
 };
