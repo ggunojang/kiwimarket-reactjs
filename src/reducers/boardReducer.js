@@ -40,7 +40,7 @@ export const boardReducer = (state, action) => {
         currentPage: action.payload,
       };
     case "SET_CURRENT_CATEGORY":
-      //console.log("SET_CURRENT_CATEGORY", action.payload);
+      console.log("SET_CURRENT_CATEGORY", action.payload);
       return {
         ...state,
         currentCategory: action.payload,

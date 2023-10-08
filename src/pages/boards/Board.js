@@ -3,8 +3,8 @@ import { useParams } from "react-router-dom";
 import LoadPage from "../../components/LoadPage";
 import { getList } from "../../api/board";
 import { BoardContext } from "../../contexts/BoardContext";
-import Gallery from "./Gallery";
-import List from "./List";
+import Gallery from "./components/Gallery";
+import List from "./components/List";
 
 const Board = () => {
   const { table } = useParams();
@@ -21,9 +21,7 @@ const Board = () => {
 
     const fetchCategory = async () => {
       try {
-        console.log("currentPage", currentPage);
         const setData = await getList(table, currentPage, currentCategory);
-
         // 데이터 호출
         if (!isCancelled && setData) {
           setAllData(setData);

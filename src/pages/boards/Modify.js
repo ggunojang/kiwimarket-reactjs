@@ -3,11 +3,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import FileUpload from "../../components/FileUpload"; // FileUpload 컴포넌트를 import
 import AlertModal from "../../components/modals/AlertModal";
 import LoadPage from "../../components/LoadPage";
-import { createPost, getCategory } from "../../api/board";
+import { updatePost, getPost } from "../../api/board";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
-function Write() {
+const Modify = () => {
   const navigate = useNavigate();
-  const { table } = useParams();
+  const { table, id } = useParams();
 
   const titleRef = useRef();
   const contentRef = useRef();
@@ -17,7 +18,9 @@ function Write() {
   const [files, setFiles] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [status, setStatus] = useState(false);
+  const [postData, setPostData] = useState(null);
   const [modalMessage, setModalMessage] = useState("");
+  const [selectedIds, setSelectedIds] = useState([]);
 
   const MAX_FILES = 5; // 최대 파일 개수 설정
   const listUrl = `/${table}/list`;
@@ -25,27 +28,43 @@ function Write() {
   useEffect(() => {
     let isCancelled = false;
 
-    const fetchCategory = async () => {
+    const fetchPost = async () => {
       try {
         const {
-          data: { config, category },
-        } = await getCategory(table);
-
-        if (!isCancelled && config) {
+          data,
+          data: {
+            view: {
+              category,
+              post,
+              board: { meta },
+            },
+          },
+        } = await getPost(table, id);
+        if (!isCancelled && data) {
+          setPostData(post);
           setCategoryData(category);
-          setConfigData(config);
+          setConfigData(meta);
         }
       } catch (error) {
-        console.error("Failed to fetch category", error);
+        console.error("Failed to fetch data", error);
       }
     };
 
-    fetchCategory();
+    fetchPost();
 
     return () => {
       isCancelled = true;
     };
-  }, [table]);
+  }, [table, id]);
+
+  
+  const handleCheckboxChange = (id, isChecked) => {
+    if (isChecked) {
+      setSelectedIds((prevIds) => [...prevIds, id]);
+    } else {
+      setSelectedIds((prevIds) => prevIds.filter((prevId) => prevId !== id));
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -55,17 +74,21 @@ function Write() {
 
     try {
       if (files) {
-        console.log(files);
         // 파일 추가
         data = new FormData();
 
         files.forEach((file, index) => {
-          data.append(`post_file[${index}]`, file);
+          data.append(`post_file_update[${index}]`, file);
+        });
+
+        selectedIds.forEach((id) => {
+          data.append("post_file_del[]", id);
         });
 
         data.append("post_category", categoryRef.current.value);
         data.append("post_title", titleRef.current.value);
         data.append("post_content", contentRef.current.value);
+
       } else {
         const { use_category } = configData;
 
@@ -73,19 +96,20 @@ function Write() {
         if (use_category) {
           data.append("post_category", categoryRef.current.value);
         }
+
+        selectedIds.forEach((id) => {
+          data.append("post_file_del[]", id);
+        });
+
         data.append("post_title", titleRef.current.value);
         data.append("post_content", contentRef.current.value);
       }
 
-      const responseData = await createPost(data, table);
-      console.log("responseData", responseData);
+      const responseData = await updatePost(data, table, id);
 
       if (responseData.status) {
         setModalMessage(responseData.message);
-        console.log("create post successfully");
       } else {
-        console.log("create post failed");
-        console.log(responseData.message);
         setModalMessage(responseData.message);
       }
       setShowModal(true);
@@ -105,11 +129,17 @@ function Write() {
     }
   };
 
-  if (configData === null) {
-    return <LoadPage pagetext="Write post" />;
+  if (postData === null) {
+    return <LoadPage pagetext="post" />;
   }
-  if (configData !== null) {
+  if (postData !== null) {
+    const post_category = postData.post_category;
+    const post_title = postData.post_title;
+    const post_content = postData.post_content;
+    const images = postData?.images?.list;
+    const postDatetime = postData ? postData.post_datetime : "";
     const { use_category } = configData;
+
     return (
       <main className="mt-14 justify-center px-6 py-12 lg:px-8">
         {showModal && (
@@ -123,7 +153,7 @@ function Write() {
         )}
         <div className="md:mx-auto md:w-full md:max-w-2xl">
           <h2 className="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-            Write
+            Modify
           </h2>
         </div>
 
@@ -146,7 +176,7 @@ function Write() {
                     id="category"
                     name="post_category"
                     ref={categoryRef}
-                    defaultValue=""
+                    defaultValue={post_category || ""}
                     required
                     className="w-full rounded-md border border-gray-300 px-4 py-2 pr-8 text-gray-400 shadow-sm md:w-auto"
                   >
@@ -166,17 +196,18 @@ function Write() {
 
             <div className="col-span-full">
               <label
-                htmlFor="username"
+                htmlFor="post_title"
                 className="block rounded-md text-sm font-medium leading-6 text-gray-900"
               >
                 Subject
               </label>
               <div className="mt-2">
                 <input
-                  id="title"
+                  id="post_title"
                   name="title"
                   type="text"
                   ref={titleRef}
+                  defaultValue={post_title}
                   placeholder="subject"
                   required
                   className="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -186,16 +217,17 @@ function Write() {
 
             <div className="col-span-full">
               <label
-                htmlFor="username"
+                htmlFor="post_content"
                 className="block rounded-md text-sm font-medium leading-6 text-gray-900"
               >
                 Content
               </label>
               <div className="mt-2">
                 <textarea
-                  id="content"
+                  id="post_content"
                   name="content"
                   ref={contentRef}
+                  defaultValue={post_content}
                   placeholder="content"
                   required
                   rows={8}
@@ -209,6 +241,40 @@ function Write() {
               setFiles={setFiles}
               MAX_FILES={MAX_FILES}
             />
+            <div className="col-span-full">
+              
+              <h4 className="block rounded-md text-sm font-medium leading-6 text-gray-900">Uploaded images</h4>
+              <div className="mt-2 grid gap-3 md:grid-cols-2">
+                {images.length > 0 &&
+                  images.map((file, index) => {
+                    const objectURL = file.pfi_image;
+                    return (
+                      <div key={index} className="relative">
+                        {file.pfi_type.startsWith("image/") && (
+                          <img
+                            src={objectURL}
+                            alt={file.name}
+                            className="w-full"
+                          />
+                        )}
+
+                        <label className="flex items-center text-xs">
+                          <input
+                            type="checkbox"
+                            onChange={(e) =>
+                              handleCheckboxChange(
+                                file.pfi_id,
+                                e.target.checked,
+                              )
+                            }
+                          />
+                          <span className="pl-1 pt-1">삭제</span>
+                        </label>
+                      </div>
+                    );
+                  })}
+              </div>
+            </div>
 
             <div className="col-span-full flex items-center justify-end gap-x-3  border-gray-900/10">
               <button
@@ -230,6 +296,6 @@ function Write() {
       </main>
     );
   }
-}
+};
 
-export default React.memo(Write);
+export default Modify;

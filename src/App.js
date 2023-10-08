@@ -16,6 +16,7 @@ import UpdateProfile from "./pages/auths/ModifyProfile";
 import ForgotPassword from "./pages/auths/ForgotPassword";
 import Board from "./pages/boards/Board";
 import Write from "./pages/boards/Write";
+import Modify from "./pages/boards/Modify";
 import Post from "./pages/boards/Post";
 import ScrollToTop from "./components/ScrollToTop";
 
@@ -65,7 +66,7 @@ function App() {
             {/* market 게시판 */}
             <Route path="/:table/list" element={<Board />} />
             <Route path="/:table/write" element={<Write />} />
-            <Route path="/:table/modify/:id" element={<Write />} />
+            <Route path="/:table/modify/:id" element={<Modify />} />
             <Route path="/:table/post/:id" element={<Post />} />
           </Routes>
           <Footer />

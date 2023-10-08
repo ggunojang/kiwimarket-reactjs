@@ -2,7 +2,7 @@ import axios from "axios";
 
 import { getAccessToken } from "../utils/tokens";
 
-const url = "http://localhost:8080";
+const url = process.env.REACT_APP_BASE_URL;
 
 /**
  * 글등록
@@ -16,6 +16,23 @@ export const createPost = async (data, table) => {
 
   const { data: responseData } = await axios.post(
     `${url}/api/board/insert/${table}`,
+    data,
+    {
+      headers: headers,
+    },
+  );
+
+  return responseData;
+};
+
+export const updatePost = async (data, table, id) => {
+  const token = getAccessToken();
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+
+  const { data: responseData } = await axios.post(
+    `${url}/api/board/insert/${table}/${id}`,
     data,
     {
       headers: headers,
@@ -44,7 +61,7 @@ export const getList = async (table, currentPage = 1, category = '') => {
   return new Promise((resolve, reject) => {
     setTimeout(async () => {
       try {
-        const { data, data: responseData } = await axios.get(
+        const { data: responseData } = await axios.get(
           `${url}/api/board/list/${table}?page=${currentPage}&category=${category}`,
         );
         resolve(responseData);

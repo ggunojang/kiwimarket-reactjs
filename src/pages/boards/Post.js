@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Navigation, Pagination, A11y } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -13,6 +13,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 
 function Post() {
+  const navigate = useNavigate();
   const { id, table } = useParams();
   const [postData, setPostData] = useState(null);
   const {
@@ -27,14 +28,20 @@ function Post() {
   useEffect(() => {
     let isCancelled = false;
 
-    const fetchCategory = async () => {
+    const fetchPost = async () => {
       try {
         const {
           data,
           data: {
-            view, view: { post },
+            view: { post },
           },
         } = await getPost(table, id);
+
+
+
+        console.log(data);
+        
+
         if (!isCancelled && data) {
           setPostData(post);
         }
@@ -43,7 +50,7 @@ function Post() {
       }
     };
 
-    fetchCategory();
+    fetchPost();
 
     return () => {
       isCancelled = true;
@@ -55,9 +62,13 @@ function Post() {
     return <LoadPage pagetext="post" />;
   }
   if (postData !== null) {
+
+    console.log(postData.category);
     const name = truncateString(postData.post_nickname, 40);
     const email = truncateString(postData.post_email, 40);
     const list = postData?.images?.list;
+    const bcaValue = postData && postData.category ? postData.category.bca_value : "";
+    const postDatetime = postData ? postData.post_datetime : "";
 
     return (
       <main className="lg:max-w-5lg mt-20 px-8 py-12 md:mx-auto md:max-w-3xl lg:w-full lg:px-0 xl:mx-auto xl:w-full xl:max-w-4xl">
@@ -68,8 +79,8 @@ function Post() {
             slidesPerView={1}
             navigation
             pagination={{ clickable: true }}
-            onSlideChange={() => console.log("slide change")}
-            onSwiper={(swiper) => console.log(swiper)}
+            onSlideChange={() => ""} // console.log("slide change")}
+            onSwiper={(swiper) => ""} // console.log(swiper)}
           >
             {list.map((value) => (
               <SwiperSlide key={value.pfi_id}>
@@ -95,7 +106,7 @@ function Post() {
               {postData.post_title}
             </h2>
             <span className="text-xs text-gray-400">
-              {postData.category.bca_value} - {postData.post_datetime}
+              {bcaValue} - {postDatetime}
             </span>
           </li>
           <li className="text-lg font-semibold tracking-tight">
@@ -113,13 +124,29 @@ function Post() {
             </span>
           </li>
         </ul>
-        <div className="mt-1 flex items-center justify-end">
-          <Link
-            to={`/${table}/list`}
-            className="mt-2 justify-center rounded-md px-3 py-1 text-sm font-semibold leading-6 tracking-tight text-black  hover:text-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            List >
-          </Link>
+        <div className="mt-1 flex items-center justify-between">
+          <div className="flex items-center">
+            <button
+              onClick={() => navigate(`/${table}/modify/${id}`)}
+              className="mt-2 justify-center rounded-md px-3 py-1 text-sm font-semibold leading-6 tracking-tight text-black  hover:text-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              Modify
+            </button>
+            <button
+              onClick={() => navigate("/")}
+              className="mt-2 justify-center rounded-md px-3 py-1 text-sm font-semibold leading-6 tracking-tight text-black  hover:text-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              Delete
+            </button>
+          </div>
+          <div className="flex items-center">
+            <button
+              onClick={() => navigate(`/${table}/list`)}
+              className="mt-2 justify-center rounded-md px-3 py-1 text-sm font-semibold leading-6 tracking-tight text-black  hover:text-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              List
+            </button>
+          </div>
         </div>
       </main>
     );

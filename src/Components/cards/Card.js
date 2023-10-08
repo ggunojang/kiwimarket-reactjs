@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { truncateString } from "../../utils/common";
 
 const Card = ({ data, paramTable = 'notice' }) => {
+  const url = process.env.REACT_APP_BASE_URL;
   const { table } = useParams();
   const currentTable = table ? table : paramTable;
   const name = truncateString(data.post_nickname, 40);
@@ -15,7 +16,7 @@ const Card = ({ data, paramTable = 'notice' }) => {
         <div className="w-full overflow-hidden rounded-xl bg-slate-500">
           <img
             className="w-full transition-all duration-150 group-hover:scale-110"
-            src={`http://localhost:8080/${data.thumb_url}`}
+            src={`${url}/${data.thumb_url}`}
             alt={data.post_title}
           />
         </div>

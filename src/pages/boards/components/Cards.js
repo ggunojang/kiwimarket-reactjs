@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
-import LoadPage from "../../components/LoadPage";
-import Pagination from "../../components/Pagination";
-import { getList } from "../../api/board";
-import { BoardContext } from "../../contexts/BoardContext";
-import Card from "../../components/cards/Card";
+import LoadPage from "../../../components/LoadPage";
+import Pagination from "../../../components/Pagination";
+import { getList } from "../../../api/board";
+import { BoardContext } from "../../../contexts/BoardContext";
+import Card from "../../../components/cards/Card";
 
 const Cards = () => {
   const { table } = useParams();

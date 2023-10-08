@@ -1,13 +1,14 @@
 import React, { useContext } from "react";
 import { Link, useParams, useNavigate} from "react-router-dom";
-import Pagination from "../../components/Pagination";
-import { BoardContext } from "../../contexts/BoardContext";
-import Card from "../../components/cards/Card";
+import Pagination from "../../../components/Pagination";
+import { BoardContext } from "../../../contexts/BoardContext";
+import Card from "../../../components/cards/Card";
+import CategorySelect from "./CategorySelect";
 
 const Gallery = () => {
   const { table } = useParams();
   const navigate = useNavigate();
-  const {dispatch} = useContext(BoardContext);
+  //const {dispatch} = useContext(BoardContext);
   const {
     state,
     state: { currentPage, categoryData, pagerData, listData },
@@ -33,24 +34,7 @@ const Gallery = () => {
           </h2>
         </div>
         <div className="my-5 flex w-full justify-end ">
-          <select
-            id="category"
-            defaultValue=""
-            required
-            className="block w-full rounded-md border border-gray-300 p-2.5 text-gray-400 shadow-sm sm:px-4 md:w-auto"
-            onChange={(e) =>
-              dispatch({ type: "SET_CATEGORY", payload: e.target.value })
-            }
-          >
-            <option disabled>지역을 선택하세요.</option>
-            <option value="">전체</option>
-            {categoryData.map((item) => (
-              <option value={item.bca_key} key={item.bca_id}>
-                {item.margin > 0 ? "- " : ""}
-                {item.bca_value}
-              </option>
-            ))}
-          </select>
+          <CategorySelect categoryData={categoryData} seleteText="카테고리를 선택하세요." />
         </div>
         <ul className="mx-auto grid grid-cols-2 gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
           {list && list.length > 0 ? (
