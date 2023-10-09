@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/kiwimarket-reactjs/static/css/main.21d450e0.css",
-    "main.js": "/kiwimarket-reactjs/static/js/main.24428257.js",
+    "main.js": "/kiwimarket-reactjs/static/js/main.1ecd7770.js",
     "static/js/787.ef83c44d.chunk.js": "/kiwimarket-reactjs/static/js/787.ef83c44d.chunk.js",
     "index.html": "/kiwimarket-reactjs/index.html",
     "main.21d450e0.css.map": "/kiwimarket-reactjs/static/css/main.21d450e0.css.map",
-    "main.24428257.js.map": "/kiwimarket-reactjs/static/js/main.24428257.js.map",
+    "main.1ecd7770.js.map": "/kiwimarket-reactjs/static/js/main.1ecd7770.js.map",
     "787.ef83c44d.chunk.js.map": "/kiwimarket-reactjs/static/js/787.ef83c44d.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.21d450e0.css",
-    "static/js/main.24428257.js"
+    "static/js/main.1ecd7770.js"
   ]
 }
