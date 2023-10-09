@@ -44,6 +44,26 @@ export const updatePost = async (data, table, id) => {
   return responseData;
 };
 
+
+export const deletePost = async (table, id) => {
+  const token = getAccessToken();
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+
+  const { data: responseData } = await axios.post(
+    `${url}/api/board/delete/${table}/${id}`,
+    {}, // data 부분은 빈 객체로 전달하거나 생략할 수 있습니다.
+    {
+      headers: headers,
+    },
+  );
+
+  console.log(responseData);
+
+  return responseData;
+};
+
 export const getCategory = async (table) => {
   return new Promise((resolve, reject) => {
     setTimeout(async () => {
@@ -82,6 +102,7 @@ export const getPost = async (table, currentId) => {
           `${url}/api/board/post/${table}/${currentId}`,
         );
         resolve(responseData);
+        console.log(resolve(responseData));
       } catch (error) {
         reject(error);
       }

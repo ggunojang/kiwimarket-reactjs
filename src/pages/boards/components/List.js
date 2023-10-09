@@ -60,7 +60,7 @@ const List = () => {
                         </p>
                       </div>
                       <div className="basis-11/12 justify-start md:basis-10/12">
-                        <p className="font-base text-sm leading-6 text-gray-900">
+                        <p className="font-base line-clamp-2 px-2 text-sm leading-6 text-gray-900 md:line-clamp-1">
                           <span className="font-semibold">
                             [{value.bca_value}]
                           </span>{" "}

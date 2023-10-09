@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import FileUpload from "../../components/FileUpload"; // FileUpload 컴포넌트를 import
+import ImagesFileUpload from "../../components/ImagesFileUpload"; // ImagesFileUpload 컴포넌트를 import
 import AlertModal from "../../components/modals/AlertModal";
 import LoadPage from "../../components/LoadPage";
 import { createPost, getCategory } from "../../api/board";
@@ -204,7 +204,7 @@ function Write() {
               </div>
             </div>
 
-            <FileUpload
+            <ImagesFileUpload
               files={files}
               setFiles={setFiles}
               MAX_FILES={MAX_FILES}

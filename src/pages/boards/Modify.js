@@ -1,10 +1,9 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import FileUpload from "../../components/FileUpload"; // FileUpload 컴포넌트를 import
+import ImagesFileUpload from "../../components/ImagesFileUpload"; // ImagesFileUpload 컴포넌트를 import
 import AlertModal from "../../components/modals/AlertModal";
 import LoadPage from "../../components/LoadPage";
 import { updatePost, getPost } from "../../api/board";
-import { XMarkIcon } from "@heroicons/react/24/outline";
 
 const Modify = () => {
   const navigate = useNavigate();
@@ -20,7 +19,7 @@ const Modify = () => {
   const [status, setStatus] = useState(false);
   const [postData, setPostData] = useState(null);
   const [modalMessage, setModalMessage] = useState("");
-  const [selectedIds, setSelectedIds] = useState([]);
+  const [deletedFileIds, setDeletedFileIds] = useState([]);
 
   const MAX_FILES = 5; // 최대 파일 개수 설정
   const listUrl = `/${table}/list`;
@@ -57,14 +56,9 @@ const Modify = () => {
     };
   }, [table, id]);
 
-  
-  const handleCheckboxChange = (id, isChecked) => {
-    if (isChecked) {
-      setSelectedIds((prevIds) => [...prevIds, id]);
-    } else {
-      setSelectedIds((prevIds) => prevIds.filter((prevId) => prevId !== id));
-    }
-  };
+  useEffect(() => {
+    console.log("file", files);
+  }, [files]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -77,18 +71,29 @@ const Modify = () => {
         // 파일 추가
         data = new FormData();
 
-        files.forEach((file, index) => {
-          data.append(`post_file[${index}]`, file);
+        // 기존 이미지와 신규 이미지를 구분하여 처리
+        files.forEach((item, index) => {
+          if (item instanceof File) {
+            // 신규 이미지 처리
+            data.append(`post_file[${index}]`, item);
+            data.append(`post_file_order[${index}]`, index + 1); // order 값 설정
+          } else {
+            // 기존 이미지 처리
+            data.append(
+              `posted_files_files[${item.pfi_id}]`,
+              item.pfi_originname,
+            );
+            data.append(`posted_files_order[${item.pfi_id}]`, index + 1); // order 값 설정
+          }
         });
 
-        selectedIds.forEach((id) => {
+        deletedFileIds.forEach((id) => {
           data.append("post_file_del[]", id);
         });
 
         data.append("post_category", categoryRef.current.value);
         data.append("post_title", titleRef.current.value);
         data.append("post_content", contentRef.current.value);
-
       } else {
         const { use_category } = configData;
 
@@ -97,7 +102,17 @@ const Modify = () => {
           data.append("post_category", categoryRef.current.value);
         }
 
-        selectedIds.forEach((id) => {
+        // 여긴 이미지는 없고 파일만 수정을 할 수 있는 부분임.
+        files.forEach((item, index) => {
+            // 기존 이미지 처리
+            data.append(
+              `posted_files_files[${item.pfi_id}]`,
+              item.pfi_originname,
+            );
+            data.append(`posted_files_order[${item.pfi_id}]`, index + 1); // order 값 설정
+        });
+
+        deletedFileIds.forEach((id) => {
           data.append("post_file_del[]", id);
         });
 
@@ -137,7 +152,7 @@ const Modify = () => {
     const post_title = postData.post_title;
     const post_content = postData.post_content;
     const images = postData?.images?.list;
-    const postDatetime = postData ? postData.post_datetime : "";
+    //const postDatetime = postData ? postData.post_datetime : "";
     const { use_category } = configData;
 
     return (
@@ -236,45 +251,54 @@ const Modify = () => {
               </div>
             </div>
 
-            <FileUpload
+            <ImagesFileUpload
               files={files}
               setFiles={setFiles}
+              prevFilesed={images}
+              deletedFileIds={deletedFileIds}
+              setDeletedFileIds={setDeletedFileIds}
               MAX_FILES={MAX_FILES}
             />
+            {/*
             <div className="col-span-full">
-              
-              <h4 className="block rounded-md text-sm font-medium leading-6 text-gray-900">Uploaded images</h4>
-              <div className="mt-2 grid gap-3 md:grid-cols-2">
-                {images.length > 0 &&
-                  images.map((file, index) => {
-                    const objectURL = file.pfi_image;
-                    return (
-                      <div key={index} className="relative">
-                        {file.pfi_type.startsWith("image/") && (
-                          <img
-                            src={objectURL}
-                            alt={file.name}
-                            className="w-full"
-                          />
-                        )}
+              {images && images.length > 0 && (
+                <>
+                  <h4 className="block rounded-md text-sm font-medium leading-6 text-gray-900">
+                    Uploaded images
+                  </h4>
+                  <div className="mt-2 grid gap-3 md:grid-cols-3">
+                    {images.map((file, index) => {
+                      const objectURL = file.pfi_image;
+                      return (
+                        <div key={index} className="relative">
+                          {file.pfi_type.startsWith("image/") && (
+                            <img
+                              src={objectURL}
+                              alt={file.name}
+                              className="w-full"
+                            />
+                          )}
 
-                        <label className="flex items-center text-xs">
-                          <input
-                            type="checkbox"
-                            onChange={(e) =>
-                              handleCheckboxChange(
-                                file.pfi_id,
-                                e.target.checked,
-                              )
-                            }
-                          />
-                          <span className="pl-1 pt-1">삭제</span>
-                        </label>
-                      </div>
-                    );
-                  })}
-              </div>
+                          <label className="flex items-center text-xs">
+                            <input
+                              type="checkbox"
+                              onChange={(e) =>
+                                handleCheckboxChange(
+                                  file.pfi_id,
+                                  e.target.checked,
+                                )
+                              }
+                            />
+                            <span className="pl-1 pt-1">삭제</span>
+                          </label>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
             </div>
+            */}
 
             <div className="col-span-full flex items-center justify-end gap-x-3  border-gray-900/10">
               <button

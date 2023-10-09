@@ -3,9 +3,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Navigation, Pagination, A11y } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
+import ConfirmModal from "../../components/modals/ConfirmModal";
 import LoadPage from "../../components/LoadPage";
 import { truncateString } from "../../utils/common";
-import { getPost } from "../../api/board";
+import { getPost, deletePost } from "../../api/board";
 import { BoardContext } from "../../contexts/BoardContext";
 
 import "swiper/css";
@@ -16,15 +17,11 @@ function Post() {
   const navigate = useNavigate();
   const { id, table } = useParams();
   const [postData, setPostData] = useState(null);
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const {
     state: { currentPage },
   } = useContext(BoardContext);
-/*
-  useEffect(() => {
-    setUserData(people);
-  }, [id]);
-*/
-  
+
   useEffect(() => {
     let isCancelled = false;
 
@@ -57,6 +54,22 @@ function Post() {
     };
   }, [table, id, currentPage]);
 
+  const handleDeleteClick = () => {
+    setDeleteModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setDeleteModalOpen(false);
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      await deletePost(table, id);
+      navigate(`/${table}/list`);
+    } catch (error) {
+      console.error("Failed to delete post", error);
+    }
+  };
 
   if (postData === null) {
     return <LoadPage pagetext="post" />;
@@ -133,11 +146,19 @@ function Post() {
               Modify
             </button>
             <button
-              onClick={() => navigate("/")}
+              onClick={handleDeleteClick}
               className="mt-2 justify-center rounded-md px-3 py-1 text-sm font-semibold leading-6 tracking-tight text-black  hover:text-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
               Delete
             </button>
+            {isDeleteModalOpen && (
+              <ConfirmModal
+                title="Delete Confirmation"
+                message="Are you sure you want to delete this post?"
+                onConfirm={handleConfirmDelete}
+                onClose={handleCloseModal}
+              />
+            )}
           </div>
           <div className="flex items-center">
             <button

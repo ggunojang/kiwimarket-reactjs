@@ -33,11 +33,20 @@ function App() {
     const fetchUser = async () => {
       if (getAccessToken()) {
         const storedUser = localStorage.getItem("user");
-        const parsedUser = JSON.parse(storedUser);
-        if (Object.keys(parsedUser).length !== 0) {
+
+        // storedUser의 값이 존재하는지 확인
+        if (storedUser) {
           try {
             const parsedUser = JSON.parse(storedUser);
-            dispatch({ type: "LOGIN", payload: parsedUser });
+
+            // parsedUser가 객체이고, 키가 있는지 확인
+            if (
+              parsedUser &&
+              typeof parsedUser === "object" &&
+              Object.keys(parsedUser).length !== 0
+            ) {
+              dispatch({ type: "LOGIN", payload: parsedUser });
+            }
           } catch (error) {
             console.error("Failed to parse stored user data", error);
           }
@@ -47,6 +56,7 @@ function App() {
 
     fetchUser();
   }, [dispatch]);
+
 
   return (
     <div className="App mx-auto w-full bg-gray-50">
