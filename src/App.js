@@ -65,19 +65,49 @@ function App() {
         <div className="flex-1 grid-flow-row flex-col justify-center">
           <Header />
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path={`${process.env.PUBLIC_URL}/`} element={<Home />} />
             {/* 회원관리 */}
-            <Route path="/logout" element={<Logout />} />
-            <Route path="/login" element={<LoginForm />} />
-            <Route path="/forgetpassword" element={<ForgotPassword />} />
-            <Route path="/signup" element={<SignUpForm />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/modify-profile" element={<UpdateProfile />} />
+            <Route
+              path={`${process.env.PUBLIC_URL}/logout`}
+              element={<Logout />}
+            />
+            <Route
+              path={`${process.env.PUBLIC_URL}/login`}
+              element={<LoginForm />}
+            />
+            <Route
+              path={`${process.env.PUBLIC_URL}/forgetpassword`}
+              element={<ForgotPassword />}
+            />
+            <Route
+              path={`${process.env.PUBLIC_URL}/signup`}
+              element={<SignUpForm />}
+            />
+            <Route
+              path={`${process.env.PUBLIC_URL}/profile`}
+              element={<Profile />}
+            />
+            <Route
+              path={`${process.env.PUBLIC_URL}/modify-profile`}
+              element={<UpdateProfile />}
+            />
             {/* market 게시판 */}
-            <Route path="/:table/list" element={<Board />} />
-            <Route path="/:table/write" element={<Write />} />
-            <Route path="/:table/modify/:id" element={<Modify />} />
-            <Route path="/:table/post/:id" element={<Post />} />
+            <Route
+              path={`${process.env.PUBLIC_URL}/:table/list`}
+              element={<Board />}
+            />
+            <Route
+              path={`${process.env.PUBLIC_URL}/:table/write`}
+              element={<Write />}
+            />
+            <Route
+              path={`${process.env.PUBLIC_URL}/:table/modify/:id`}
+              element={<Modify />}
+            />
+            <Route
+              path={`${process.env.PUBLIC_URL}/:table/post/:id`}
+              element={<Post />}
+            />
           </Routes>
           <Footer />
         </div>

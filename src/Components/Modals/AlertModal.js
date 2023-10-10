@@ -19,11 +19,9 @@ export default function AlertModal({
   const useHandleClick = () => {
     onClose(); // 여기에 onClose 호출
     setOpen(false);
-    console.log("listUrl", listUrl);
-    console.log("status", status);
-    if (status) {
+    //if (status) {
       navigate(listUrl);
-    }
+    //}
   };
 
   return (

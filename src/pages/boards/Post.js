@@ -3,11 +3,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Navigation, Pagination, A11y } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
-import ConfirmModal from "../../components/modals/ConfirmModal";
-import LoadPage from "../../components/LoadPage";
 import { truncateString } from "../../utils/common";
 import { getPost, deletePost } from "../../api/board";
 import { BoardContext } from "../../contexts/BoardContext";
+
+import ConfirmModal from "../../components/modals/ConfirmModal";
+import AlertModal from "../../components/modals/AlertModal";
+import LoadPage from "../../components/LoadPage";
+
+import Comment from "./Comment";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -16,8 +20,13 @@ import "swiper/css/pagination";
 function Post() {
   const navigate = useNavigate();
   const { id, table } = useParams();
+  const storedUser = localStorage.getItem("user");
   const [postData, setPostData] = useState(null);
+  const [status, setStatus] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [linkUrl, setLinkUrl] = useState(`/${table}/list`);
   const {
     state: { currentPage },
   } = useContext(BoardContext);
@@ -34,9 +43,7 @@ function Post() {
           },
         } = await getPost(table, id);
 
-
-
-        console.log(data);
+        console.log("data,data");
         
 
         if (!isCancelled && data) {
@@ -64,10 +71,30 @@ function Post() {
 
   const handleConfirmDelete = async () => {
     try {
-      await deletePost(table, id);
-      navigate(`/${table}/list`);
+      const responseData = await deletePost(table, id);
+      if (responseData.status) {
+        setModalMessage(responseData.message);
+      } else {
+        setModalMessage(responseData.message);
+      }
+      setShowModal(true);
+      setStatus(responseData.status);
     } catch (error) {
-      console.error("Failed to delete post", error);
+      const {
+        response: { data },
+      } = error;
+      // 오류 처리
+      if (
+        error.response &&
+        error.response.status === 401 &&
+        error.response.data.message === "The access token is invalid."
+      ) {
+        //alert("로그인을 해주세요!"); // 401 오류에 대한 메시지 설정
+        setModalMessage("로그인을 해주세요!");
+        setShowModal(true);
+        setStatus(data.status);
+        setLinkUrl('/login');
+      }
     }
   };
 
@@ -75,8 +102,6 @@ function Post() {
     return <LoadPage pagetext="post" />;
   }
   if (postData !== null) {
-
-    console.log(postData.category);
     const name = truncateString(postData.post_nickname, 40);
     const email = truncateString(postData.post_email, 40);
     const list = postData?.images?.list;
@@ -85,6 +110,15 @@ function Post() {
 
     return (
       <main className="lg:max-w-5lg mt-20 px-8 py-12 md:mx-auto md:max-w-3xl lg:w-full lg:px-0 xl:mx-auto xl:w-full xl:max-w-4xl">
+        {showModal && (
+          <AlertModal
+            title="Notice"
+            message={modalMessage}
+            status={status}
+            listUrl={linkUrl}
+            onClose={() => setShowModal(false)}
+          />
+        )}
         {list && list.length > 0 && (
           <Swiper
             modules={[Navigation, Pagination, A11y]}
@@ -106,7 +140,6 @@ function Post() {
             ))}
           </Swiper>
         )}
-
         <ul className="mx-auto mt-5 grid grid-cols-1">
           <li>{name}</li>
           <li>
@@ -137,33 +170,42 @@ function Post() {
             </span>
           </li>
         </ul>
-        <div className="mt-1 flex items-center justify-between">
+        
+        <div className="w-full">
+          <Comment />
+        </div>
+        
+        <div className="mt-1 flex items-center justify-between border-t">
           <div className="flex items-center">
-            <button
-              onClick={() => navigate(`/${table}/modify/${id}`)}
-              className="mt-2 justify-center rounded-md px-3 py-1 text-sm font-semibold leading-6 tracking-tight text-black  hover:text-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Modify
-            </button>
-            <button
-              onClick={handleDeleteClick}
-              className="mt-2 justify-center rounded-md px-3 py-1 text-sm font-semibold leading-6 tracking-tight text-black  hover:text-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Delete
-            </button>
-            {isDeleteModalOpen && (
-              <ConfirmModal
-                title="Delete Confirmation"
-                message="Are you sure you want to delete this post?"
-                onConfirm={handleConfirmDelete}
-                onClose={handleCloseModal}
-              />
+            {storedUser && (
+              <div>
+                <button
+                  onClick={() => navigate(`/${table}/modify/${id}`)}
+                  className="mt-2 justify-center rounded-md px-3 py-1 text-sm font-semibold leading-6 tracking-tight text-black hover:text-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                >
+                  Modify
+                </button>
+                <button
+                  onClick={handleDeleteClick}
+                  className="mt-2 justify-center rounded-md px-3 py-1 text-sm font-semibold leading-6 tracking-tight text-black hover:text-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                >
+                  Delete
+                </button>
+                {isDeleteModalOpen && (
+                  <ConfirmModal
+                    title="Delete Confirmation"
+                    message="Are you sure you want to delete this post?"
+                    onConfirm={handleConfirmDelete}
+                    onClose={handleCloseModal}
+                  />
+                )}
+              </div>
             )}
           </div>
           <div className="flex items-center">
             <button
               onClick={() => navigate(`/${table}/list`)}
-              className="mt-2 justify-center rounded-md px-3 py-1 text-sm font-semibold leading-6 tracking-tight text-black  hover:text-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="mt-2 justify-center rounded-md px-3 py-1 text-sm font-semibold leading-6 tracking-tight text-black hover:text-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
               List
             </button>

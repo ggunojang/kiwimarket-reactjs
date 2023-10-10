@@ -1,18 +1,23 @@
-import React, { useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import Pagination from "../../../components/Pagination";
 import { BoardContext } from "../../../contexts/BoardContext";
 import CategorySelect from "./CategorySelect";
+import AlertModal from "../../../components/modals/AlertModal";
 
 const List = () => {
   const { table } = useParams();
   const navigate = useNavigate();
-  //const { dispatch } = useContext(BoardContext);
+  const [showModal, setShowModal] = useState(false);
+  const [status, setStatus] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [linkUrl, setLinkUrl] = useState(`/${table}/list`);
+  //const {dispatch} = useContext(BoardContext);
+  const storedUser = localStorage.getItem("user");
   const {
     state,
     state: { currentPage, categoryData, pagerData, listData },
   } = useContext(BoardContext);
-
 
   const handlePageChange = (page) => {
     if (page !== currentPage) {
@@ -23,8 +28,20 @@ const List = () => {
 
   if (state) {
     const { list } = listData;
+    //console.log(pagerData);
+    //console.log(listData);
+    //console.log(storedUser);
     return (
       <main className=" mt-10 justify-center bg-slate-50 py-12 sm:px-6 lg:px-8">
+        {showModal && (
+          <AlertModal
+            title="Notice"
+            message={modalMessage}
+            status={status}
+            listUrl={linkUrl}
+            onClose={() => setShowModal(false)}
+          />
+        )}
         <div className=" sm:mx-auto sm:w-full sm:max-w-sm">
           <h2 className="my-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Notice
@@ -95,12 +112,14 @@ const List = () => {
           </div>
         </div>
         <div className="container inset-x-0 top-0 z-50 row-span-1 mx-auto flex justify-end sm:px-0 md:px-10">
-          <Link
-            to={`/${table}/write`}
-            className="mt-2 justify-center rounded-md px-3 py-1 text-sm font-semibold leading-6 tracking-tight text-black  hover:text-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            Post &gt;
-          </Link>
+          {storedUser && (
+            <Link
+              to={`/${table}/write`}
+              className="mt-2 justify-center rounded-md px-3 py-1 text-sm font-semibold leading-6 tracking-tight text-black  hover:text-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              Post &gt;
+            </Link>
+          )}
         </div>
       </main>
     );

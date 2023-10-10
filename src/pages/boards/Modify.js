@@ -20,9 +20,9 @@ const Modify = () => {
   const [postData, setPostData] = useState(null);
   const [modalMessage, setModalMessage] = useState("");
   const [deletedFileIds, setDeletedFileIds] = useState([]);
+  const [linkUrl, setLinkUrl] = useState(`/${table}/list`);
 
   const MAX_FILES = 5; // 최대 파일 개수 설정
-  const listUrl = `/${table}/list`;
 
   useEffect(() => {
     let isCancelled = false;
@@ -138,8 +138,10 @@ const Modify = () => {
         error.response.status === 401 &&
         error.response.data.message === "The access token is invalid."
       ) {
-        alert("로그인을 해주세요!"); // 401 오류에 대한 메시지 설정
-        navigate("/login");
+        setModalMessage("로그인을 해주세요!");
+        setShowModal(true);
+        setStatus(data.status);
+        setLinkUrl("/login");
       }
     }
   };
@@ -150,7 +152,7 @@ const Modify = () => {
   if (postData !== null) {
     const post_category = postData.post_category;
     const post_title = postData.post_title;
-    const post_content = postData.post_content;
+    const post_content = postData.post_content.replace(/<br\s*\/?>/gi, "");;
     const images = postData?.images?.list;
     //const postDatetime = postData ? postData.post_datetime : "";
     const { use_category } = configData;
@@ -162,7 +164,7 @@ const Modify = () => {
             title="Notice"
             message={modalMessage}
             status={status}
-            listUrl={listUrl}
+            listUrl={linkUrl}
             onClose={() => setShowModal(false)}
           />
         )}

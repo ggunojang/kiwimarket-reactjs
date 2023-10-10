@@ -18,9 +18,9 @@ function Write() {
   const [showModal, setShowModal] = useState(false);
   const [status, setStatus] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
+  const [linkUrl, setLinkUrl] = useState(`/${table}/list`);
 
   const MAX_FILES = 5; // 최대 파일 개수 설정
-  const listUrl = `/${table}/list`;
 
   useEffect(() => {
     let isCancelled = false;
@@ -99,8 +99,10 @@ function Write() {
         error.response.status === 401 &&
         error.response.data.message === "The access token is invalid."
       ) {
-        alert("로그인을 해주세요!"); // 401 오류에 대한 메시지 설정
-        navigate("/login");
+        setModalMessage("로그인을 해주세요!");
+        setShowModal(true);
+        setStatus(data.status);
+        setLinkUrl("/login");
       }
     }
   };
@@ -117,7 +119,7 @@ function Write() {
             title="Notice"
             message={modalMessage}
             status={status}
-            listUrl={listUrl}
+            listUrl={linkUrl}
             onClose={() => setShowModal(false)}
           />
         )}
