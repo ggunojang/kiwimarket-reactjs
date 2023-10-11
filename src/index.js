@@ -4,6 +4,7 @@ import "./index.css";
 import App from "./App";
 import { AuthProvider } from "./contexts/AuthContext";
 import { BoardProvider } from "./contexts/BoardContext";
+import { CommentProvider } from "./contexts/CommentContext";
 import reportWebVitals from "./reportWebVitals";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -11,7 +12,9 @@ root.render(
   //<React.StrictMode>
   <AuthProvider>
     <BoardProvider>
-      <App />
+      <CommentProvider>
+        <App />
+      </CommentProvider>
     </BoardProvider>
   </AuthProvider>,
   //</React.StrictMode>,

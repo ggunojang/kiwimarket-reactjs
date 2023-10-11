@@ -22,6 +22,7 @@ function Post() {
   const { id, table } = useParams();
   const storedUser = localStorage.getItem("user");
   const [postData, setPostData] = useState(null);
+  const [boardData, setBoardData] = useState(null);
   const [status, setStatus] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -39,15 +40,16 @@ function Post() {
         const {
           data,
           data: {
-            view: { post },
+            view: { post, board },
           },
         } = await getPost(table, id);
 
-        console.log("data,data");
+        //console.log("data", data);
         
 
         if (!isCancelled && data) {
           setPostData(post);
+          setBoardData(board);
         }
       } catch (error) {
         console.error("Failed to fetch category", error);
@@ -107,7 +109,8 @@ function Post() {
     const list = postData?.images?.list;
     const bcaValue = postData && postData.category ? postData.category.bca_value : "";
     const postDatetime = postData ? postData.post_datetime : "";
-
+    const brd_id = boardData.brd_id;
+    const post_id = postData.post_id;
     return (
       <main className="lg:max-w-5lg mt-20 px-8 py-12 md:mx-auto md:max-w-3xl lg:w-full lg:px-0 xl:mx-auto xl:w-full xl:max-w-4xl">
         {showModal && (
@@ -170,11 +173,11 @@ function Post() {
             </span>
           </li>
         </ul>
-        
+
         <div className="w-full">
-          <Comment />
+          <Comment brd_id={brd_id} post_id={post_id} />
         </div>
-        
+
         <div className="mt-1 flex items-center justify-between border-t">
           <div className="flex items-center">
             {storedUser && (
