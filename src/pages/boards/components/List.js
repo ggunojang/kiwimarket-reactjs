@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import Pagination from "../../../components/Pagination";
 import { BoardContext } from "../../../contexts/BoardContext";
@@ -9,10 +9,8 @@ const List = () => {
   const { table } = useParams();
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
-  const [status, setStatus] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [linkUrl, setLinkUrl] = useState(`/${table}/list`);
-  //const {dispatch} = useContext(BoardContext);
   const storedUser = localStorage.getItem("user");
   const {
     state,
@@ -21,23 +19,18 @@ const List = () => {
 
   const handlePageChange = (page) => {
     if (page !== currentPage) {
-      //dispatch({ type: "SET_LIST", payload: null }); // 리스트 데이터 초기화 시키면 pageLoad를 불러들인다. 어떤게 좋을지 고민해
-      navigate(`/${table}/list?page=${page}`);
+       navigate(`/${table}/list?page=${page}`);
     }
   };
 
   if (state) {
     const { list } = listData;
-    //console.log(pagerData);
-    //console.log(listData);
-    //console.log(storedUser);
     return (
       <main className=" mt-10 justify-center bg-slate-50 py-12 sm:px-6 lg:px-8">
         {showModal && (
           <AlertModal
             title="Notice"
             message={modalMessage}
-            status={status}
             listUrl={linkUrl}
             onClose={() => setShowModal(false)}
           />

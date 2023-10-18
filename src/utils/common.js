@@ -36,6 +36,10 @@ export const truncateString = (str, num) => {
   return str.slice(0, num) + "...";
 };
 
+export const classNames = (...classes) => {
+  return classes.filter(Boolean).join(' ')
+}
+
 // Agent 체크
 export const parseUserAgent = () => {
   const userAgent = navigator.userAgent;
@@ -71,3 +75,4 @@ export const NewlineText = ({ text }) => {
 
   return <>{newText}</>;
 }
+

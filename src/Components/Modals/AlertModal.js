@@ -9,7 +9,6 @@ import { useNavigate } from "react-router-dom";
 export default function AlertModal({
   title,
   message,
-  status = false,
   onClose,
   listUrl = "/",
 }) {
@@ -19,9 +18,7 @@ export default function AlertModal({
   const useHandleClick = () => {
     onClose(); // 여기에 onClose 호출
     setOpen(false);
-    //if (status) {
-      navigate(listUrl);
-    //}
+    navigate(listUrl);
   };
 
   return (

@@ -1,25 +1,21 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import LoadPage from "../../../components/LoadPage";
 import Pagination from "../../../components/Pagination";
 import { getList } from "../../../api/board";
 import { BoardContext } from "../../../contexts/BoardContext";
 import Card from "../../../components/cards/Card";
-import AlertModal from "../../components/modals/AlertModal";
 
 const Cards = () => {
   const { table } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
   const {
-    state,
     state: { currentPage },
   } = useContext(BoardContext);
   const [listData, setListData] = useState(null);
   const [perPage, setPerPage] = useState(10);
   const [totalPage, setTotalPage] = useState(0);
   const [categoryData, setCategoryData] = useState(null);
-  const [isVisible, setIsVisible] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("");
 
   useEffect(() => {
@@ -88,15 +84,6 @@ const Cards = () => {
       <main
         className={`lg:max-w-5lg mt-14 px-8 py-12 transition duration-1000 ease-in-out md:mx-auto md:max-w-3xl lg:w-full lg:px-0 xl:mx-auto xl:w-full xl:max-w-6xl`}
       >
-        {showModal && (
-          <AlertModal
-            title="Notice"
-            message={modalMessage}
-            status={status}
-            listUrl={linkUrl}
-            onClose={() => setShowModal(false)}
-          />
-        )}
         <div className="mb-10 md:mx-auto md:w-full md:max-w-xl">
           <h2 className="mt-5 text-center text-3xl font-semibold leading-9 tracking-tight text-gray-900">
             중고거래 매물

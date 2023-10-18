@@ -83,12 +83,13 @@ export const deleteComment = async (brd_id, post_id, cmt_id) => {
 };
 
 // 리스트
-export const getList = async (brd_id) => {
+export const getList = async (brd_id, post_id, currentPage = 1) => {
+  console.log();
   return new Promise((resolve, reject) => {
     setTimeout(async () => {
       try {
         const { data: responseData } = await axios.get(
-          `${url}/api/board/comment/${brd_id}`,
+          `${url}/api/board/comment/${brd_id}/${post_id}?page=${currentPage}`,
         );
         resolve(responseData);
         //console.log(responseData);

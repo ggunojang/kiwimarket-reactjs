@@ -1,10 +1,12 @@
-import React, { useRef } from "react";
+import React, { useRef, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { createComment } from "../../../api/comment";
+import { CommentContext } from "../../../contexts/CommentContext";
 
 export const CommentWrite = ({brd_id=0, post_id=0}) => {
   const navigate = useNavigate();
   const commentRef = useRef();
+  const { dispatch } = useContext(CommentContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,6 +27,7 @@ export const CommentWrite = ({brd_id=0, post_id=0}) => {
         console.log("create comment successfully", responseData);
         // 댓글이 성공적으로 등록되면 commentRef 내용을 초기화
         commentRef.current.value = "";
+        dispatch({ type: "NEW_COMMENTS_ADDED" });
       } else {
         console.log("create comment failed");
         console.log(responseData.message);

@@ -4,6 +4,7 @@ export const initialState = {
   currentPage: 1,
   commentData: null,
   pagerData: null,
+  newComments: false, //신규 등록시 다시 불러들임
 };
 
 export const commentReducer = (state, action) => {
@@ -25,6 +26,16 @@ export const commentReducer = (state, action) => {
       return {
         ...state,
         currentPage: action.payload,
+      };
+    case "NEW_COMMENTS_ADDED":
+      return {
+        ...state,
+        newComments: true,
+      };
+    case "COMMENTS_FETCHED":
+      return {
+        ...state,
+        newComments: false,
       };
     default:
       return state;
