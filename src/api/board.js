@@ -29,7 +29,7 @@ export const createPost = async (data, table) => {
         } catch (error) {
           reject(error);
         }
-      }, 200); // 1몇 초  후에 API 요청을 실행합니다.
+      }, 500); // 1몇 초  후에 API 요청을 실행합니다.
     });
 };
 
@@ -56,7 +56,7 @@ export const updatePost = async (data, table, id) => {
       } catch (error) {
         reject(error);
       }
-    }, 200); // 1몇 초  후에 API 요청을 실행합니다.
+    }, 500); // 1몇 초  후에 API 요청을 실행합니다.
   });
 };
 
@@ -82,7 +82,7 @@ export const deletePost = async (table, id) => {
       } catch (error) {
         reject(error);
       }
-    }, 200); // 1몇 초  후에 API 요청을 실행합니다.
+    }, 500); // 1몇 초  후에 API 요청을 실행합니다.
   });
 };
 
@@ -97,7 +97,7 @@ export const getCategory = async (table) => {
       } catch (error) {
         reject(error);
       }
-    }, 200); // 1몇 초  후에 API 요청을 실행합니다.
+    }, 500); // 1몇 초  후에 API 요청을 실행합니다.
   });
 }
 
@@ -113,7 +113,7 @@ export const getList = async (table, currentPage = 1, category = '') => {
       } catch (error) {
         reject(error);
       }
-    }, 200); // 몇 초 후에 API 요청을 실행합니다.
+    }, 500); // 몇 초 후에 API 요청을 실행합니다.
   });
 };
 
@@ -129,6 +129,6 @@ export const getPost = async (table, currentId) => {
       } catch (error) {
         reject(error);
       }
-    }, 200); // 몇 초 후에 API 요청을 실행합니다.
+    }, 500); // 몇 초 후에 API 요청을 실행합니다.
   });
 }

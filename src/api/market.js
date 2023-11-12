@@ -4,8 +4,11 @@ import { getAccessToken } from "../utils/tokens";
 
 const url = process.env.REACT_APP_BASE_URL;
 
-//등록
-export const createComment = async (data, brd_id, post_id) => {
+/**
+ * 글등록
+ */
+
+export const createMarketPost = async (data) => {
   return new Promise((resolve, reject) => {
     setTimeout(async () => {
       try {
@@ -15,7 +18,7 @@ export const createComment = async (data, brd_id, post_id) => {
         };
 
         const { data: responseData } = await axios.post(
-          `${url}/api/board/comment_insert/${brd_id}/${post_id}`,
+          `${url}/api/market/insert`,
           data,
           {
             headers: headers,
@@ -30,8 +33,7 @@ export const createComment = async (data, brd_id, post_id) => {
   });
 };
 
-//수정
-export const updateComment = async (data, brd_id, post_id, cmt_id) => {
+export const updateMarketPost = async (data, id) => {
   return new Promise((resolve, reject) => {
     setTimeout(async () => {
       try {
@@ -39,15 +41,17 @@ export const updateComment = async (data, brd_id, post_id, cmt_id) => {
         const headers = {
           Authorization: `Bearer ${token}`,
         };
-
+        //`${url}/api/market/update/${id}`,
         const { data: responseData } = await axios.post(
-          `${url}/api/board/comment_update/${brd_id}/${post_id}/${cmt_id}`,
+          `${url}/api/market/update/${id}`,
           data,
           {
             headers: headers,
           },
         );
 
+        //console.log(responseData);
+
         resolve(responseData);
       } catch (error) {
         reject(error);
@@ -56,8 +60,7 @@ export const updateComment = async (data, brd_id, post_id, cmt_id) => {
   });
 };
 
-// 삭제
-export const deleteComment = async (brd_id, post_id, cmt_id) => {
+export const deleteMarketPost = async (id) => {
   return new Promise((resolve, reject) => {
     setTimeout(async () => {
       try {
@@ -67,8 +70,8 @@ export const deleteComment = async (brd_id, post_id, cmt_id) => {
         };
 
         const { data: responseData } = await axios.post(
-          `${url}/api/board/comment_delete/${brd_id}/${post_id}/${cmt_id}`,
-          {},
+          `${url}/api/market/delete/${id}`,
+          {}, // data 부분은 빈 객체로 전달하거나 생략할 수 있습니다.
           {
             headers: headers,
           },
@@ -82,17 +85,46 @@ export const deleteComment = async (brd_id, post_id, cmt_id) => {
   });
 };
 
-// 리스트
-export const getList = async (brd_id, post_id, currentPage = 1) => {
-  console.log();
+export const getMarketCategory = async () => {
   return new Promise((resolve, reject) => {
     setTimeout(async () => {
       try {
         const { data: responseData } = await axios.get(
-          `${url}/api/board/comment/${brd_id}/${post_id}?page=${currentPage}`,
+          `${url}/api/market/category`,
+        );
+        resolve(responseData);
+      } catch (error) {
+        reject(error);
+      }
+    }, 500); // 1몇 초  후에 API 요청을 실행합니다.
+  });
+};
+
+export const getMarketList = async (currentPage = 1, category = "") => {
+  return new Promise((resolve, reject) => {
+    setTimeout(async () => {
+      try {
+        const { data: responseData } = await axios.get(
+          `${url}/api/market/list?page=${currentPage}&category=${category}`,
         );
         resolve(responseData);
         //console.log(responseData);
+      } catch (error) {
+        reject(error);
+      }
+    }, 500); // 몇 초 후에 API 요청을 실행합니다.
+  });
+};
+
+export const getMarketPost = async (currentId) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(async () => {
+      try {
+        const { data: responseData } = await axios.get(
+          `${url}/api/market/post/${currentId}`,
+        );
+        resolve(responseData);
+        //console.log(resolve(responseData));
       } catch (error) {
         reject(error);
       }

@@ -141,7 +141,7 @@ export const modifyUser = async (data) => {
       } catch (error) {
         reject(error);
       }
-    }, 200); // 1몇 초  후에 API 요청을 실행합니다.
+    }, 500); // 1몇 초  후에 API 요청을 실행합니다.
   });
 };
 

@@ -14,6 +14,6 @@ export const getBoard = async (table, per_page = 12) => {
       } catch (error) {
         reject(error);
       }
-    }, 200); // 몇 초 후에 API 요청을 실행합니다.
+    }, 500); // 몇 초 후에 API 요청을 실행합니다.
   });
 };

@@ -4,6 +4,7 @@ import "./index.css";
 import App from "./App";
 import { AuthProvider } from "./contexts/AuthContext";
 import { BoardProvider } from "./contexts/BoardContext";
+import { MarketProvider } from "./contexts/MarketContext";
 import { CommentProvider } from "./contexts/CommentContext";
 import reportWebVitals from "./reportWebVitals";
 
@@ -12,9 +13,11 @@ root.render(
   //<React.StrictMode>
   <AuthProvider>
     <BoardProvider>
-      <CommentProvider>
-        <App />
-      </CommentProvider>
+      <MarketProvider>
+        <CommentProvider>
+          <App />
+        </CommentProvider>
+      </MarketProvider>
     </BoardProvider>
   </AuthProvider>,
   //</React.StrictMode>,
