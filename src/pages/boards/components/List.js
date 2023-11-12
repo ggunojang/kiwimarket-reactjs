@@ -10,7 +10,7 @@ const List = () => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
-  const [linkUrl, setLinkUrl] = useState(`/${table}/list`);
+  const [linkUrl, setLinkUrl] = useState(`/board/${table}/list`);
   const storedUser = localStorage.getItem("user");
   const {
     state,
@@ -19,7 +19,7 @@ const List = () => {
 
   const handlePageChange = (page) => {
     if (page !== currentPage) {
-       navigate(`/${table}/list?page=${page}`);
+       navigate(`/board/${table}/list?page=${page}`);
     }
   };
 
@@ -58,6 +58,9 @@ const List = () => {
               <div className="hidden shrink-0 justify-between text-center md:inline-block md:basis-1/12">
                 이름
               </div>
+              <div className="hidden shrink-0 justify-between text-center md:inline-block md:basis-1/12">
+                조회
+              </div>
             </li>
             <li>
               {list && list.length > 0 ? (
@@ -74,14 +77,27 @@ const List = () => {
                           <span className="font-semibold">
                             [{value.bca_value}]
                           </span>{" "}
-                          <Link to={`/${table}/post/${value.post_id}`}>
+                          <Link to={`/board/${table}/post/${value.post_id}`}>
                             {value.post_title}
+                            {value.post_comment_count > 0 ? (
+                              <span className="text-xs text-gray-400">
+                                {" "}
+                                +{value.post_comment_count}
+                              </span>
+                            ) : (
+                              ""
+                            )}
                           </Link>
                         </p>
                       </div>
                       <div className="hidden md:inline-block md:basis-1/12">
                         <p className="truncate text-center text-xs leading-5 text-gray-500">
                           {value.post_username}
+                        </p>
+                      </div>
+                      <div className="hidden md:inline-block md:basis-1/12">
+                        <p className="truncate text-center text-xs leading-5 text-gray-500">
+                          {value.post_hit}
                         </p>
                       </div>
                     </li>
@@ -107,7 +123,7 @@ const List = () => {
         <div className="container inset-x-0 top-0 z-50 row-span-1 mx-auto flex justify-end sm:px-0 md:px-10">
           {storedUser && (
             <Link
-              to={`/${table}/write`}
+              to={`/board/${table}/write`}
               className="mt-2 justify-center rounded-md px-3 py-1 text-sm font-semibold leading-6 tracking-tight text-black  hover:text-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
               Post &gt;

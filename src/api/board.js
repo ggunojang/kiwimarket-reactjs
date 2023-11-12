@@ -41,7 +41,7 @@ export const updatePost = async (data, table, id) => {
         const headers = {
           Authorization: `Bearer ${token}`,
         };
-
+        //`${url}/api/board/update/${table}/${id}`,
         const { data: responseData } = await axios.post(
           `${url}/api/board/update/${table}/${id}`,
           data,

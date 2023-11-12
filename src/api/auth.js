@@ -121,21 +121,28 @@ export const registerUser = async (data) => {
 /**
  * 회원정보 수정
  */
-
 export const modifyUser = async (data) => {
-  const token = getAccessToken();
-  const headers = {
-    Authorization: `Bearer ${token}`,
-  };
-  const { data: responseData } = await axios.post(
-    `${url}/api/auth/modify`,
-    data,
-    {
-      headers: headers,
-    },
-  );
-
-  return responseData;
+  return new Promise((resolve, reject) => {
+    setTimeout(async () => {
+      try {
+        const token = getAccessToken();
+        const headers = {
+          Authorization: `Bearer ${token}`,
+        };
+        //console.log("src: ", `${url}/api/auth/modify`);
+        const { data: responseData } = await axios.post(
+          `${url}/api/auth/modify`,
+          data,
+          {
+            headers: headers,
+          },
+        );
+        resolve(responseData);
+      } catch (error) {
+        reject(error);
+      }
+    }, 200); // 1몇 초  후에 API 요청을 실행합니다.
+  });
 };
 
 /**

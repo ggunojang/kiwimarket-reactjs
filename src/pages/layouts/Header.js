@@ -6,7 +6,7 @@ import { AuthContext } from "../../contexts/AuthContext";
 import Dropdown from "../../components/dropdowns/Dropdown";
 
 const navigation = [
-  { name: "Notice", href: "/notice/list" },
+  { name: "Notice", href: "/board/notice/list" },
   { name: "Market", href: "/market/list" },
   { name: "Marketplace", href: "#" },
   { name: "Company", href: "#" },
@@ -74,7 +74,8 @@ export default function Header() {
               </a>
             </>
           ) : (
-            user && user.user && <Dropdown username={user.user.username} />
+            user &&
+            user.user && <Dropdown username={user.user.username} profile_file={user.user_detail.filename} />
           )}
         </div>
       </nav>

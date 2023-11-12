@@ -31,7 +31,7 @@ const Card = ({ data, paramTable = 'notice' }) => {
             {data.bca_value}
           </p>
           <div className="mt-1 text-xs tracking-tight text-gray-400">
-            관심 {data.post_like} ∙ 조회 {data.post_hit}
+            조회 {data.post_hit} ∙ 댓글 {data.post_comment_count} ∙ 관심 {data.post_like}
           </div>
         </div>
       </Link>

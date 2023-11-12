@@ -1,5 +1,9 @@
 import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
+
+
 import { registerUser } from "../../api/auth";
 import AlertModal from "../../components/modals/AlertModal";
 
@@ -12,9 +16,26 @@ export default function SignUpForm() {
   const lastnameRef = useRef();
   const passwordRef = useRef();
   const passwordConfirmRef = useRef();
+  const fileInputRef = useRef(null);
+
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imageName, setImageName] = useState("");
 
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
+
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSelectedImage(reader.result);
+        setImageName(file.name);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,6 +48,7 @@ export default function SignUpForm() {
       data.append("lastname", lastnameRef.current.value);
       data.append("password", passwordRef.current.value);
       data.append("passconf", passwordConfirmRef.current.value);
+      data.append("userphoto", fileInputRef.current.value);
 
       console.log("data", data);
 
@@ -188,6 +210,45 @@ export default function SignUpForm() {
                 required
                 className="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
+            </div>
+          </div>
+
+          <div className="my-0 border-t border-teal-100 py-0 md:col-span-full"></div>
+
+          <div className="col-span-full">
+            <label
+              htmlFor="photo"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              User photo
+            </label>
+            <div className="mt-2 flex items-center gap-x-3">
+              <input
+                type="file"
+                ref={fileInputRef}
+                style={{ display: "none" }}
+                onChange={handleImageChange}
+              />
+              {selectedImage ? (
+                <img
+                  src={selectedImage}
+                  alt="Selected"
+                  className="h-12 w-12 rounded-full"
+                />
+              ) : (
+                <UserCircleIcon
+                  className="h-12 w-12 text-gray-300"
+                  aria-hidden="true"
+                />
+              )}
+              <button
+                type="button"
+                className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                onClick={() => fileInputRef.current.click()}
+              >
+                Change
+              </button>
+              <span class="text-sm text-gray-500">{imageName}</span>
             </div>
           </div>
 

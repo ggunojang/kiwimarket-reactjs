@@ -16,7 +16,9 @@ export default function AlertModal({
   const [open, setOpen] = useState(true);
 
   const useHandleClick = () => {
-    onClose(); // 여기에 onClose 호출
+    if (typeof onClose === "function") {
+      onClose(); // onClose가 함수일 때만 호출
+    }
     setOpen(false);
     navigate(listUrl);
   };

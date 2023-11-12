@@ -91,21 +91,38 @@ function App() {
               path={`${process.env.PUBLIC_URL}/modify-profile`}
               element={<UpdateProfile />}
             />
-            {/* market 게시판 */}
+            {/* 게시판 */}
             <Route
-              path={`${process.env.PUBLIC_URL}/:table/list`}
+              path={`${process.env.PUBLIC_URL}/board/:table/list`}
               element={<Board />}
             />
             <Route
-              path={`${process.env.PUBLIC_URL}/:table/write`}
+              path={`${process.env.PUBLIC_URL}/board/:table/write`}
               element={<Write />}
             />
             <Route
-              path={`${process.env.PUBLIC_URL}/:table/modify/:id`}
+              path={`${process.env.PUBLIC_URL}/board/:table/modify/:id`}
               element={<Modify />}
             />
             <Route
-              path={`${process.env.PUBLIC_URL}/:table/post/:id`}
+              path={`${process.env.PUBLIC_URL}/board/:table/post/:id`}
+              element={<Post />}
+            />
+            {/* 마켓 */}
+            <Route
+              path={`${process.env.PUBLIC_URL}/market/list`}
+              element={<Board />}
+            />
+            <Route
+              path={`${process.env.PUBLIC_URL}/market/write`}
+              element={<Write />}
+            />
+            <Route
+              path={`${process.env.PUBLIC_URL}/market/modify/:id`}
+              element={<Modify />}
+            />
+            <Route
+              path={`${process.env.PUBLIC_URL}/market/post/:id`}
               element={<Post />}
             />
           </Routes>

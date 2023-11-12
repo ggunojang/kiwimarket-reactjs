@@ -17,13 +17,14 @@ const Gallery = () => {
 
   const handlePageChange = (page) => {
     if (page !== currentPage) {
-      navigate(`/${table}/list?page=${page}`);
+      navigate(`/board/${table}/list?page=${page}`);
       //dispatch({ type: "SET_LIST", payload: null }); // 리스트 데이터 초기화 시키면 pageLoad를 불러들인다. 어떤게 좋을지 고민해
     }
   };
 
   if (state) {
     const { list } = listData;
+    console.log(list);
     return (
       <main
         className={`lg:max-w-5lg mt-14 px-8 py-12 transition duration-1000 ease-in-out md:mx-auto md:max-w-3xl lg:w-full lg:px-0 xl:mx-auto xl:w-full xl:max-w-6xl`}
@@ -58,7 +59,7 @@ const Gallery = () => {
         </div>
         <div className="mx-auto flex justify-end">
           <Link
-            to={`/${table}/write`}
+            to={`/board/${table}/write`}
             className="mt-2 justify-center rounded-md px-3 py-1 text-sm font-semibold leading-6 tracking-tight text-black  hover:text-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
             Post &gt;

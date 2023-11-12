@@ -1,5 +1,6 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { UserCircleIcon } from "@heroicons/react/24/solid";
 import { AuthContext } from "../../contexts/AuthContext";
 import LoadPage from "../../components/LoadPage";
 import ConfirmModal from "../../components/modals/ConfirmModal";
@@ -10,6 +11,8 @@ function Profile() {
   const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
   const [confirmShowModal, setConfirmShowModal] = useState(false);
+
+  const url = process.env.REACT_APP_BASE_URL + "/assets/uploads/users";
 
   const {
     state: { isLogin, user },
@@ -110,6 +113,27 @@ function Profile() {
                   {formatDate("Y-m-d h:i:s", new Date(user.updated_at.date))}
                 </dd>
               </div>
+
+              <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt className="text-sm font-medium leading-6 text-gray-900">
+                  Profile image
+                </dt>
+                <dd className="mt-1 text-sm leading-6 text-gray-500 sm:col-span-2 sm:mt-0">
+                  {user_detail.filename ? (
+                    <img
+                      src={`${url}/${user_detail.filename}`}
+                      alt="Profile"
+                      className="h-12 w-12 rounded-full"
+                    />
+                  ) : (
+                    <UserCircleIcon
+                      className="h-12 w-12 text-gray-300"
+                      aria-hidden="true"
+                    />
+                  )}
+                </dd>
+              </div>
+
               <div className="col-span-full flex items-center justify-end gap-x-3  border-t border-gray-900/10 pt-10">
                 <button
                   type="button"

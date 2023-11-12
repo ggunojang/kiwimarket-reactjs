@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { UserIcon } from "@heroicons/react/24/solid";
+
 // https://headlessui.com/
 // https://heroicons.com/
 
@@ -8,7 +9,10 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Dropdown({ username }) {
+export default function Dropdown({ username, profile_file }) {
+
+  const url = process.env.REACT_APP_BASE_URL + '/assets/uploads/users';
+  
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
@@ -16,10 +20,18 @@ export default function Dropdown({ username }) {
           <div className="mr-4">{username}</div>
           <div>
             <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gray-50 sm:mx-0 sm:h-10 sm:w-10">
-              <UserIcon
-                className="h-6 w-6 font-bold text-gray-500"
-                aria-hidden="true"
-              />
+              {profile_file ? (
+                <img
+                  src={`${url}/${profile_file}`}
+                  alt="Profile"
+                  className="h-10 w-10 rounded-full"
+                />
+              ) : (
+                <UserIcon
+                  className="h-6 w-6 font-bold text-gray-500"
+                  aria-hidden="true"
+                />
+              )}
             </div>
           </div>
         </Menu.Button>

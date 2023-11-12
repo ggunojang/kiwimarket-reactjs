@@ -20,7 +20,7 @@ const Modify = () => {
   const [postData, setPostData] = useState(null);
   const [modalMessage, setModalMessage] = useState("");
   const [deletedFileIds, setDeletedFileIds] = useState([]);
-  const [linkUrl, setLinkUrl] = useState(`/${table}/list`);
+  const [linkUrl, setLinkUrl] = useState(`/board/${table}/list`);
 
   const MAX_FILES = 5; // 최대 파일 개수 설정
 
@@ -40,6 +40,7 @@ const Modify = () => {
           },
         } = await getPost(table, id);
         if (!isCancelled && data) {
+          console.log(data);
           setPostData(post);
           setCategoryData(category);
           setConfigData(meta);
@@ -122,6 +123,7 @@ const Modify = () => {
 
       const responseData = await updatePost(data, table, id);
 
+      console.log(responseData);
       if (responseData.status) {
         setModalMessage(responseData.message);
       } else {
@@ -152,7 +154,7 @@ const Modify = () => {
   if (postData !== null) {
     const post_category = postData.post_category;
     const post_title = postData.post_title;
-    const post_content = postData.post_content.replace(/<br\s*\/?>/gi, "");;
+    const post_content = postData.post_content.replace(/<br\s*\/?>/gi, "");
     const images = postData?.images?.list;
     //const postDatetime = postData ? postData.post_datetime : "";
     const { use_category } = configData;
@@ -201,7 +203,7 @@ const Modify = () => {
                       Please select a category
                     </option>
                     {categoryData.map((item) => (
-                      <option value={item.bca_id} key={item.bca_id}>
+                      <option value={item.bca_key} key={item.bca_key}>
                         {item.margin > 0 ? "- " : ""}
                         {item.bca_value}
                       </option>

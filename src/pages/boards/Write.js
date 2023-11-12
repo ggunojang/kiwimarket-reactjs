@@ -18,7 +18,7 @@ function Write() {
   const [showModal, setShowModal] = useState(false);
   const [status, setStatus] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
-  const [linkUrl, setLinkUrl] = useState(`/${table}/list`);
+  const [linkUrl, setLinkUrl] = useState(`/board/${table}/list`);
 
   const MAX_FILES = 5; // 최대 파일 개수 설정
 
@@ -28,13 +28,14 @@ function Write() {
     const fetchCategory = async () => {
       try {
         const {
-          data: { config, category },
+          data, data: { config, category },
         } = await getCategory(table);
-
+        
         if (!isCancelled && config) {
           setCategoryData(category);
           setConfigData(config);
         }
+
       } catch (error) {
         console.error("Failed to fetch category", error);
       }
@@ -55,7 +56,6 @@ function Write() {
 
     try {
       if (files) {
-        console.log(files);
         // 파일 추가
         data = new FormData();
 
@@ -156,7 +156,7 @@ function Write() {
                       Please select a category
                     </option>
                     {categoryData.map((item) => (
-                      <option value={item.bca_id} key={item.bca_id}>
+                      <option value={item.bca_key} key={item.bca_key}>
                         {item.margin > 0 ? "- " : ""}
                         {item.bca_value}
                       </option>

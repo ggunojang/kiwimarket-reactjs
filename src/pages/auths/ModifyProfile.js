@@ -2,11 +2,11 @@ import React, {
   useRef,
   useEffect,
   useState,
-  useCallback,
   useContext,
 } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContext";
+import { UserCircleIcon } from "@heroicons/react/24/solid";
 import LoadPage from "../../components/LoadPage";
 import ConfirmModal from "../../components/modals/ConfirmModal";
 import AlertModal from "../../components/modals/AlertModal";
@@ -25,30 +25,67 @@ const UpdateProfile = () => {
   const lastnameRef = useRef();
   const passwordRef = useRef();
   const passwordConfirmRef = useRef();
+  const fileInputRef = useRef(null);
 
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imageName, setImageName] = useState("");
   const [userData, setUserData] = useState(null);
+
+  const url = process.env.REACT_APP_BASE_URL + "/assets/uploads/users";
 
   const {
     state: { isLogin, user },
   } = useContext(AuthContext);
+
 
   useEffect(() => {
     setUserData(user); // useEffect 훅을 사용하여 user 값이 변경될 때만 setUserData 함수를 호출하도록 합니다.
     console.log(isLogin);
   }, [user, isLogin]);
 
-  const handleConfirm = useCallback(async () => {
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSelectedImage(reader.result);
+        setImageName(file.name);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleConfirm = async () => {
     try {
-      const data = new URLSearchParams();
-      data.append("username", usernameRef.current.value);
-      data.append("email", emailRef.current.value);
-      data.append("firstname", firstnameRef.current.value);
-      data.append("lastname", lastnameRef.current.value);
-      data.append("password", passwordRef.current.value);
-      data.append("passconf", passwordConfirmRef.current.value);
+      let data;
+
+      // 파일이 선택되었는지 확인
+      const files = fileInputRef.current.files;
+      if (files.length) {
+        data = new FormData();
+        [...files].forEach((file, index) => {
+          data.append(`post_file[${index}]`, file);
+        });
+        // 파일이 선택된 경우 FormData 객체를 사용
+        data.append("username", usernameRef.current.value);
+        data.append("email", emailRef.current.value);
+        data.append("firstname", firstnameRef.current.value);
+        data.append("lastname", lastnameRef.current.value);
+        data.append("password", passwordRef.current.value);
+        data.append("passconf", passwordConfirmRef.current.value);
+      } else {
+        // 파일이 선택되지 않은 경우 URLSearchParams 객체를 사용
+        data = new URLSearchParams();
+        data.append("username", usernameRef.current.value);
+        data.append("email", emailRef.current.value);
+        data.append("firstname", firstnameRef.current.value);
+        data.append("lastname", lastnameRef.current.value);
+        data.append("password", passwordRef.current.value);
+        data.append("passconf", passwordConfirmRef.current.value);
+      }
+
 
       const responseData = await modifyUser(data);
-
       if (responseData.status) {
         setModalMessage("updated successfully");
 
@@ -62,14 +99,14 @@ const UpdateProfile = () => {
       }
       setShowModal(true);
     } catch (error) {
-      console.error("Login failed", error);
+      console.error("Error occurred", error);
     }
-  }, [dispatch]);
+  };
 
-  const handleSubmit = useCallback((e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setConfirmShowModal(true);
-  }, []);
+  };
 
   if (!isLogin) {
     return <LoadPage pagetext="Modify Profile" />;
@@ -87,7 +124,9 @@ const UpdateProfile = () => {
             onClose={() => setConfirmShowModal(false)}
           />
         )}
-        {showModal && <AlertModal title={modalMessage} />}
+        {showModal && (
+          <AlertModal title={modalMessage} listUrl={"/modify-profile"} />
+        )}
         <div className="md:mx-auto md:w-full md:max-w-2xl">
           <h2 className="mt-5 text-2xl font-semibold leading-9 tracking-tight text-gray-900">
             Modify Profile
@@ -170,8 +209,6 @@ const UpdateProfile = () => {
               </div>
             </div>
 
-            <div className="border-t border-teal-100 sm:hidden sm:border-hidden md:col-span-full"></div>
-
             <div className="sm:col-span-3">
               <label
                 htmlFor="lastname"
@@ -215,7 +252,7 @@ const UpdateProfile = () => {
               </div>
             </div>
 
-            <div className=" col-span-full pt-6">
+            <div className="col-span-full pt-6">
               <div className="flex items-center justify-between">
                 <label
                   htmlFor="inputConfirmPassword"
@@ -234,6 +271,47 @@ const UpdateProfile = () => {
                   autoComplete="new-password"
                   className="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
                 />
+              </div>
+            </div>
+
+            <div className="border-t border-teal-100 md:col-span-full"></div>
+
+            <div className="col-span-full">
+              <label
+                htmlFor="photo"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                User photo
+              </label>
+              <div className="mt-2 flex items-center gap-x-3">
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  style={{ display: "none" }}
+                  onChange={handleImageChange}
+                  accept="image/*"
+                />
+                {user_detail.filename ? (
+                  <img
+                    src={selectedImage ? selectedImage : `${url}/${user_detail.filename}`}
+                    alt="Profile"
+                    className="h-12 w-12 rounded-full"
+                  />
+                ) : (
+                  <UserCircleIcon
+                    className="h-12 w-12 text-gray-300"
+                    aria-hidden="true"
+                  />
+                )}
+
+                <button
+                  type="button"
+                  className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                  onClick={() => fileInputRef.current.click()}
+                >
+                  Change
+                </button>
+                <span className="text-sm text-gray-500">{imageName}</span>
               </div>
             </div>
 

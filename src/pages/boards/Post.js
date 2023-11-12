@@ -2,10 +2,12 @@ import React, { useEffect, useState, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Navigation, Pagination, A11y } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { UserCircleIcon } from "@heroicons/react/24/solid";
 
 import { truncateString } from "../../utils/common";
 import { getPost, deletePost } from "../../api/board";
 import { BoardContext } from "../../contexts/BoardContext";
+import { AuthContext } from "../../contexts/AuthContext";
 
 import ConfirmModal from "../../components/modals/ConfirmModal";
 import AlertModal from "../../components/modals/AlertModal";
@@ -23,14 +25,22 @@ function Post() {
   const storedUser = localStorage.getItem("user");
   const [postData, setPostData] = useState(null);
   const [boardData, setBoardData] = useState(null);
+  const [usersDetail, setUsersDetail] = useState(null);
   const [status, setStatus] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
-  const [linkUrl, setLinkUrl] = useState(`/${table}/list`);
+  const [linkUrl, setLinkUrl] = useState(`/board/${table}/list`);
+
+  const url = process.env.REACT_APP_BASE_URL + "/assets/uploads/users";
+
   const {
     state: { currentPage },
   } = useContext(BoardContext);
+
+  const {
+    state: { isLogin, user },
+  } = useContext(AuthContext);
 
   useEffect(() => {
     let isCancelled = false;
@@ -40,16 +50,17 @@ function Post() {
         const {
           data,
           data: {
-            view: { post, board },
+            view: { post, board, users_detail },
           },
         } = await getPost(table, id);
 
-        //console.log("data", data);
+        //console.log("post", data);
         
 
         if (!isCancelled && data) {
           setPostData(post);
           setBoardData(board);
+          setUsersDetail(users_detail);
         }
       } catch (error) {
         console.error("Failed to fetch category", error);
@@ -100,6 +111,7 @@ function Post() {
     }
   };
 
+
   if (postData === null) {
     return <LoadPage pagetext="post" />;
   }
@@ -108,6 +120,7 @@ function Post() {
     const email = truncateString(postData.post_email, 40);
     const list = postData?.images?.list;
     const bcaValue = postData && postData.category ? postData.category.bca_value : "";
+    console.log("bcaValue", postData);
     const postDatetime = postData ? postData.post_datetime : "";
     const brd_id = boardData.brd_id;
     const post_id = postData.post_id;
@@ -143,11 +156,24 @@ function Post() {
             ))}
           </Swiper>
         )}
-        <ul className="mx-auto mt-5 grid grid-cols-1">
-          <li>{name}</li>
-          <li>
-            <span className="text-xs text-gray-400">{email}</span>
+        <ul className="mx-auto mt-5 flex items-center font-bold">
+          <li className="mr-5">
+            {usersDetail.filename ? (
+              <img
+                src={`${url}/${usersDetail.filename}`}
+                alt="Profile"
+                className="h-10 w-10 rounded-full"
+              />
+            ) : (
+              <UserCircleIcon
+                className="h-10 w-10 text-gray-300"
+                aria-hidden="true"
+              />
+            )}
           </li>
+          <div>
+            <li>{name}</li>
+          </div>
         </ul>
         <ul className="mx-auto mt-5 grid grid-cols-1 gap-4 border-b border-t py-8">
           <li>
@@ -169,13 +195,14 @@ function Post() {
           </li>
           <li>
             <span className="text-xs text-gray-400">
-              관심 {postData.post_like} ∙ 조회 {postData.post_hit}
+              조회 {postData.post_hit} ∙ 댓글 {postData.post_comment_count} ∙
+              관심 {postData.post_like}
             </span>
           </li>
         </ul>
 
         <div className="w-full">
-          <Comment brd_id={brd_id} post_id={post_id} />
+          <Comment brd_id={brd_id} post_id={post_id} user={user} />
         </div>
 
         <div className="mt-1 flex items-center justify-between border-t">
@@ -183,7 +210,7 @@ function Post() {
             {storedUser && (
               <div>
                 <button
-                  onClick={() => navigate(`/${table}/modify/${id}`)}
+                  onClick={() => navigate(`/board/${table}/modify/${id}`)}
                   className="mt-2 justify-center rounded-md px-3 py-1 text-sm font-semibold leading-6 tracking-tight text-black hover:text-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
                   Modify
@@ -207,7 +234,7 @@ function Post() {
           </div>
           <div className="flex items-center">
             <button
-              onClick={() => navigate(`/${table}/list`)}
+              onClick={() => navigate(`/board/${table}/list`)}
               className="mt-2 justify-center rounded-md px-3 py-1 text-sm font-semibold leading-6 tracking-tight text-black hover:text-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
               List
