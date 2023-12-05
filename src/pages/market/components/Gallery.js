@@ -1,12 +1,11 @@
 import React, { useContext } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Pagination from "../../../components/Pagination";
 import { MarketContext } from "../../../contexts/MarketContext";
-import Card from "../../../components/cards/Card";
+import Card from "../../../components/cards/MarketCard";
 import CategorySelect from "./CategorySelect";
 
 const Gallery = () => {
-  const { table } = useParams();
   const navigate = useNavigate();
   //const {dispatch} = useContext(MarketContext);
   const {
@@ -23,7 +22,7 @@ const Gallery = () => {
 
   if (state) {
     const { list } = listData;
-    console.log(list);
+    console.log("list", list);
     return (
       <main
         className={`lg:max-w-5lg mt-14 px-8 py-12 transition duration-1000 ease-in-out md:mx-auto md:max-w-3xl lg:w-full lg:px-0 xl:mx-auto xl:w-full xl:max-w-6xl`}
@@ -36,13 +35,13 @@ const Gallery = () => {
         <div className="my-5 flex w-full justify-end ">
           <CategorySelect
             categoryData={categoryData}
-            seleteText="카테고리를 선택하세요."
+            seletetText="카테고리를 선택하세요."
           />
         </div>
         <ul className="mx-auto grid grid-cols-2 gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
-          {list && list.length > 0 ? (
+          {list && Array.isArray(list) && list.length > 0 ? (
             list.map((value) => (
-              <li key={value.post_id}>
+              <li key={value.market_id}>
                 <Card data={value} />
               </li>
             ))

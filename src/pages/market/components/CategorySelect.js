@@ -2,7 +2,7 @@
 import React, { useContext } from "react";
 import { MarketContext } from "../../../contexts/MarketContext";
 
-function CategorySelect({ categoryData, seleteText }) {
+function CategorySelect({ categoryData, seletetText }) {
   const { dispatch } = useContext(MarketContext);
   const {
     state: { currentCategory },
@@ -21,7 +21,7 @@ function CategorySelect({ categoryData, seleteText }) {
       }
     >
       <option value="" disabled>
-        {seleteText}
+        {seletetText}
       </option>
       <option value="">전체선택</option>
       {categoryData.map((item) => (

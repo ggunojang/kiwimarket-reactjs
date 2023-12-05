@@ -18,6 +18,11 @@ import Board from "./pages/boards/Board";
 import Write from "./pages/boards/Write";
 import Modify from "./pages/boards/Modify";
 import Post from "./pages/boards/Post";
+
+import Market from "./pages/market/Market";
+import { default as MarketPost } from "./pages/market/Post";
+import { default as MarketWriter } from "./pages/market/Write";
+
 import ScrollToTop from "./components/ScrollToTop";
 
 /**
@@ -111,11 +116,11 @@ function App() {
             {/* 마켓 */}
             <Route
               path={`${process.env.PUBLIC_URL}/market/list`}
-              element={<Board />}
+              element={<Market />}
             />
             <Route
               path={`${process.env.PUBLIC_URL}/market/write`}
-              element={<Write />}
+              element={<MarketWriter />}
             />
             <Route
               path={`${process.env.PUBLIC_URL}/market/modify/:id`}
@@ -123,7 +128,7 @@ function App() {
             />
             <Route
               path={`${process.env.PUBLIC_URL}/market/post/:id`}
-              element={<Post />}
+              element={<MarketPost />}
             />
           </Routes>
           <Footer />

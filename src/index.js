@@ -6,6 +6,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { BoardProvider } from "./contexts/BoardContext";
 import { MarketProvider } from "./contexts/MarketContext";
 import { CommentProvider } from "./contexts/CommentContext";
+import { MarketCommentProvider } from "./contexts/MarketCommentContext";
 import reportWebVitals from "./reportWebVitals";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -14,9 +15,11 @@ root.render(
   <AuthProvider>
     <BoardProvider>
       <MarketProvider>
-        <CommentProvider>
-          <App />
-        </CommentProvider>
+        <MarketCommentProvider>
+          <CommentProvider>
+            <App />
+          </CommentProvider>
+        </MarketCommentProvider>
       </MarketProvider>
     </BoardProvider>
   </AuthProvider>,

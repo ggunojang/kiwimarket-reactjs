@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ImagesFileUpload from "../../components/ImagesFileUpload"; // ImagesFileUpload 컴포넌트를 import
 import AlertModal from "../../components/modals/AlertModal";
 import LoadPage from "../../components/LoadPage";
@@ -7,7 +7,6 @@ import { createMarketPost, getMarketCategory } from "../../api/market";
 
 function Write() {
   const navigate = useNavigate();
-  const { table } = useParams();
 
   const titleRef = useRef();
   const contentRef = useRef();
@@ -28,9 +27,8 @@ function Write() {
     const fetchCategory = async () => {
       try {
         const {
-          data,
           data: { config, category },
-        } = await getMarketCategory(table);
+        } = await getMarketCategory();
 
         if (!isCancelled && config) {
           setCategoryData(category);
@@ -46,7 +44,7 @@ function Write() {
     return () => {
       isCancelled = true;
     };
-  }, [table]);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -77,7 +75,7 @@ function Write() {
         data.append("market_content", contentRef.current.value);
       }
 
-      const responseData = await createMarketPost(data, table);
+      const responseData = await createMarketPost(data);
       console.log("responseData", responseData);
 
       if (responseData.status) {

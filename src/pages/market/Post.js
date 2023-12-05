@@ -23,7 +23,6 @@ function Post() {
   const navigate = useNavigate();
   const { id } = useParams();
   const storedUser = localStorage.getItem("user");
-  const [postData, setPostData] = useState(null);
   const [marketData, setMarketData] = useState(null);
   const [usersDetail, setUsersDetail] = useState(null);
   const [status, setStatus] = useState(false);
@@ -50,14 +49,13 @@ function Post() {
         const {
           data,
           data: {
-            view: { post, market, users_detail },
+            view: { market, users_detail },
           },
         } = await getMarketPost(id);
 
-        //console.log("post", data);
+        console.log("market", data);
 
         if (!isCancelled && data) {
-          setPostData(post);
           setMarketData(market);
           setUsersDetail(users_detail);
         }
@@ -110,19 +108,18 @@ function Post() {
     }
   };
 
-  if (postData === null) {
+  if (marketData === null) {
     return <LoadPage pagetext="post" />;
   }
-  if (postData !== null) {
-    const name = truncateString(postData.market_nickname, 40);
-    const email = truncateString(postData.market_email, 40);
-    const list = postData?.images?.list;
-    const bcaValue =
-      postData && postData.category ? postData.category.bca_value : "";
-    console.log("bcaValue", postData);
-    const postDatetime = postData ? postData.market_datetime : "";
-    const brd_id = marketData.brd_id;
-    const market_id = postData.market_id;
+  if (marketData !== null) {
+    console.log("marketData", marketData);
+    const name = truncateString(marketData.market_nickname, 40);
+    const email = truncateString(marketData.market_email, 40);
+    const list = marketData?.images?.list;
+    const mcaValue = marketData && marketData.category ? marketData.category.mca_value : "";
+    const marketDatetime = marketData ? marketData.market_datetime : "";
+    const market_id = marketData.market_id;
+
     return (
       <main className="lg:max-w-5lg mt-20 px-8 py-12 md:mx-auto md:max-w-3xl lg:w-full lg:px-0 xl:mx-auto xl:w-full xl:max-w-4xl">
         {showModal && (
@@ -145,11 +142,11 @@ function Post() {
             onSwiper={(swiper) => ""} // console.log(swiper)}
           >
             {list.map((value) => (
-              <SwiperSlide key={value.pfi_id}>
+              <SwiperSlide key={value.mfi_id}>
                 <img
                   className="mx-auto w-full rounded-3xl transition-all duration-150"
-                  src={value.pfi_image}
-                  alt={postData.market_title}
+                  src={value.market_image}
+                  alt={marketData.market_title}
                 />
               </SwiperSlide>
             ))}
@@ -177,10 +174,10 @@ function Post() {
         <ul className="mx-auto mt-5 grid grid-cols-1 gap-4 border-b border-t py-8">
           <li>
             <h2 className="text-xl font-bold tracking-tight ">
-              {postData.market_title}
+              {marketData.market_title}
             </h2>
             <span className="text-xs text-gray-400">
-              {bcaValue} - {postDatetime}
+              {mcaValue} - {marketDatetime}
             </span>
           </li>
           <li className="text-lg font-semibold tracking-tight">
@@ -189,19 +186,19 @@ function Post() {
           <li>
             <div
               className="text-sm font-normal leading-relaxed"
-              dangerouslySetInnerHTML={{ __html: postData.market_content }}
+              dangerouslySetInnerHTML={{ __html: marketData.market_content }}
             />
           </li>
           <li>
             <span className="text-xs text-gray-400">
-              조회 {postData.market_hit} ∙ 댓글 {postData.market_comment_count} ∙
-              관심 {postData.market_like}
+              조회 {marketData.market_hit} ∙ 댓글{" "}
+              {marketData.market_comment_count} ∙ 관심 {marketData.market_like}
             </span>
           </li>
         </ul>
 
         <div className="w-full">
-          <Comment brd_id={brd_id} market_id={market_id} user={user} />
+          <Comment market_id={market_id} user={user} />
         </div>
 
         <div className="mt-1 flex items-center justify-between border-t">

@@ -7,7 +7,7 @@ import { updateMarketPost, getMarketPost } from "../../api/market";
 
 const Modify = () => {
   const navigate = useNavigate();
-  const { table, id } = useParams();
+  const { id } = useParams();
 
   const titleRef = useRef();
   const contentRef = useRef();
@@ -38,7 +38,7 @@ const Modify = () => {
               market: { meta },
             },
           },
-        } = await getMarketPost(table, id);
+        } = await getMarketPost(id);
         if (!isCancelled && data) {
           console.log(data);
           setPostData(post);
@@ -55,7 +55,7 @@ const Modify = () => {
     return () => {
       isCancelled = true;
     };
-  }, [table, id]);
+  }, [id]);
 
   useEffect(() => {
     console.log("file", files);
@@ -121,7 +121,7 @@ const Modify = () => {
         data.append("market_content", contentRef.current.value);
       }
 
-      const responseData = await updateMarketPost(data, table, id);
+      const responseData = await updateMarketPost(data,  id);
 
       console.log(responseData);
       if (responseData.status) {

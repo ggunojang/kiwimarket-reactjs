@@ -1,12 +1,11 @@
 import React, { useState, useContext } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Pagination from "../../../components/Pagination";
 import { MarketContext } from "../../../contexts/MarketContext";
 import CategorySelect from "./CategorySelect";
 import AlertModal from "../../../components/modals/AlertModal";
 
 const List = () => {
-  const { table } = useParams();
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");

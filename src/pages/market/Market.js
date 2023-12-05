@@ -9,7 +9,7 @@ import List from "./components/List";
 const Market = () => {
   const { table } = useParams();
   const [allData, setAllData] = useState(null);
-  const [metaData, setMetaData] = useState(null);
+  const [configData, setConfigData] = useState(null);
   const { dispatch } = useContext(MarketContext);
   const {
     state: { currentPage, currentCategory },
@@ -21,11 +21,12 @@ const Market = () => {
     const fetchCategory = async () => {
       try {
         const setData = await getMarketList(table, currentPage, currentCategory);
+        //console.log(setData);
         // 데이터 호출
         if (!isCancelled && setData) {
           const {
             data: {
-              view: { pager, category, board_meta, listData },
+              view: { pager, category, market_config, listData },
             },
           } = setData;
           
@@ -40,8 +41,8 @@ const Market = () => {
           dispatch({ type: "SET_CATEGORY", payload: category });
 
           //메타테그
-          dispatch({ type: "SET_META", payload: board_meta });
-          setMetaData(board_meta);
+          dispatch({ type: "SET_META", payload: market_config });
+          setConfigData(market_config);
         }
       } catch (error) {
         console.error("Failed to fetch category", error);
@@ -59,8 +60,8 @@ const Market = () => {
     return <LoadPage pagetext={table} />;
   }
 
-  if (metaData) {
-    return metaData.use_gallery_list ? <Gallery /> : <List />;
+  if (configData) {
+    return configData.use_gallery_list ? <Gallery /> : <List />;
   }
 };
 
